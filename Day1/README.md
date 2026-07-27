@@ -409,3 +409,11 @@ docker image inspect myubuntu:1.0
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/071af632-b050-49cd-bf09-a0005d936340" />
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/3bd6e91f-4d90-4caf-85bf-9d76a7d49069" />
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f06ba0c9-33f9-4fec-8ad2-1b824d462d2d" />
+
+Create a container using our custom docker image
+```
+docker run -dit --name ubuntu5-jegan --hostname ubuntu-jegan myubuntu:1.0 /bin/bash
+docker ps
+exit
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/c0cec3ed-b88c-4d78-ae40-2776785a241e" />
