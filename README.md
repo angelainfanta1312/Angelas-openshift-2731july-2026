@@ -14,3 +14,8 @@ We have got two servers with below configurations
 - 21 TB HDD
 </pre>
 
+#### Server 1 (192.168.10.200)
+![Server1](server1.png)
+
+#### Server 2 (192.168.10.201)
+![Server2](server2.png)
