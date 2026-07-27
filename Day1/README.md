@@ -103,8 +103,6 @@
   
 </pre>
 
-
-
 ## Info - Docker High Level Architecture
 ![docker](DockerHighLevelArchitecture.png)
 
@@ -125,9 +123,9 @@
 - Containers gets an unique name and IP address
 </pre>  
 
-
-
 ## Info - Docker Alternatives
 <pre>
-  
+- Podman
+- Containerd
+- LXC
 </pre>
