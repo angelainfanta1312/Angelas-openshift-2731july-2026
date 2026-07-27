@@ -417,3 +417,102 @@ docker ps
 exit
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/c0cec3ed-b88c-4d78-ae40-2776785a241e" />
+
+## Lab - Setup a Load Balancer with nginx image with 3 webserver containers behind it
+Let's create 3 webserver containers using nginx docker image
+```
+docker run -d --name webserver1-jegan --hostname webserver1-jegan nginx:latest
+docker run -d --name webserver2-jegan --hostname webserver2-jegan nginx:latest
+docker run -d --name webserver3-jegan --hostname webserver3-jegan nginx:latest
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/ed9a04d1-7db4-4d35-bfca-fc11695b5e5d" />
+
+
+Let's create a load balancer container using nginx docker image
+```
+docker run -d --name lb-jegan --hostname lb-jegan -p 8080:80 nginx:latest
+```
+
+List and see if all 4 containers are running 
+```
+docker ps
+```
+
+We need to configure the lb container inorder to make it work as a load balancer
+```
+docker exec -it lb-jegan /bin/sh
+cat /etc/nginx/nginx.conf
+pwd
+exit
+```
+
+Let's copy the nginx.conf from the container to our local machine
+```
+docker cp lb-jegan:/etc/nginx/nginx.conf .
+cat nginx.conf
+```
+
+Now we need to edit the nginx.conf file as shown below
+```
+user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    upstream myapp1 {
+        server 172.17.0.2:80; # IP Address of webserver1-jegan
+        server 172.17.0.3:80; # IP address of webserver2-jegan
+        server 172.17.0.4:80; # IP address of webserver3-jegan
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://myapp1;
+        }
+    }
+}
+```
+
+Let's copy the updated nginx.conf from local machine to your lb-jegan container
+```
+docker cp nginx.conf lb-jegan:/etc/nginx/nginx.conf
+```
+
+Let's restart the lb-jegan container to apply the config changes
+```
+docker restart lb-jegan
+```
+
+Make sure your lb-jegan container runs after your config changes
+```
+docker ps
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f34c8aad-2528-400d-b39b-7a9f63f29153" />
+
+Now we need to customize the web-pages on individual web servers
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/2d35a2de-7aa0-4525-ae33-97b0728331b5" />
+```
+echo "Web server 1" > index.html
+docker cp index.html webserver1-jegan:/usr/share/nginx/html/index.html
+
+echo "Web server 2" > index.html
+docker cp index.html webserver2-jegan:/usr/share/nginx/html/index.html
+
+echo "Web server 3" > index.html
+docker cp index.html webserver3-jegan:/usr/share/nginx/html/index.html
+```
+
+Now, let's test the load balancer setup (round-robin)
+```
+curl --k http://localhost:8080
+curl --k http://localhost:8080
+curl --k http://localhost:8080
+```
