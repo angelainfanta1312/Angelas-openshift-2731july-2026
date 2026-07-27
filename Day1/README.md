@@ -245,3 +245,19 @@ docker ps -a
 ```
 
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b0bb426e-6509-4e66-b62f-aaeb9ce2c995" />
+
+## Lab - Getting inside a container shell
+```
+docker exec -it ubuntu2 /bin/bash
+ls -l
+hostname
+hostname -i
+exit
+```
+
+Listing and see the container ubuntu2 still continues to run
+```
+docker ps
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/508836f5-1708-4515-9905-244d01e3235f" />
