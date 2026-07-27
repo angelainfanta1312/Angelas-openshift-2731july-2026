@@ -100,6 +100,7 @@
 - generally, end-users like us, will never use the Container Runtime directly
 - examples
   - runC, cRun, CRI-O, rkt(pronounced as Rocket), etc
+  
 </pre>
 
 
@@ -108,6 +109,7 @@
 <pre>
   
 </pre>
+
 ## Info - Docker Alternatives
 <pre>
   
