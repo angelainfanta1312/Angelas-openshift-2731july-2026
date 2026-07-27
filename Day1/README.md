@@ -106,9 +106,7 @@
 
 
 ## Info - Docker High Level Architecture
-<pre>
-  
-</pre>
+![docker](DockerHighLevelArchitecture.png)
 
 ## Info - Docker Alternatives
 <pre>
