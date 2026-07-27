@@ -294,4 +294,5 @@ docker ps
 docker container inspect ubuntu3-jegan
 docker inspect ubuntu3-jegan
 ```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/92c4f1a4-1850-412f-ab97-4d34baa985a5" />
 
