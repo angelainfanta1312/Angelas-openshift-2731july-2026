@@ -207,3 +207,20 @@ docker rmi hello-world:latest
 docker images | grep hello
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/04fce26e-051d-4d00-87c6-0ac5d3efc7ea" />
+
+## Lab - Create a container in the foreground(interactive) mode
+
+The command below will create a new container and starts(runs) it
+```
+docker run -it --name ubuntu1 --hostname ubuntu1 ubuntu:latest /bin/bash
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b51cb239-82be-4607-ab20-45a06eb78b06" />
+
+Note
+<pre>
+-it - stands for interactive terminal
+-name - is the name of the docker container which must be unique ( lowercases preferred )
+-hostname - hostname of the container
+-ubuntu:latest - is the image name along with its tag/version(latest)
+-/bin/bash - tells we would like to start bash terminal within the container once it starts running
+</pre>
