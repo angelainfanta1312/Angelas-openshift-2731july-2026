@@ -1,5 +1,14 @@
 # Day 1
 
+## Info - Bootloader
+<pre>
+- we can dual/multi-boot 3~4 OS on the same laptop/desktop
+- eg:
+  LILO, GRUB, BootCamp
+- GRUB2 is the bootloader that is supported by pretty much all the latest linux distros
+- only one OS can be active at any point of time
+</pre>
+
 ## Info - Hypervisor Overview
 <pre>
 - is nothing but virtualization technology
@@ -29,14 +38,21 @@
   - the virtualization feature set is called AMD-V
 - there are 2 types of hypervisors
   1. Type 1 - a.k.a Bare-metal Hypervisors
-     e.g: VMWare vSphere/vCenter, Linux KVM & Microsoft Hyper-v
+     - e.g: VMWare vSphere/vCenter, Linux KVM & Microsoft Hyper-v
+     - these are used in Servers & Workstations
+     - there is not Host OS requirement
+     - the Hypervisor itself acts as a minimal OS
   2. Type 2 - a.k.a Hosted Hypervisors
-     e.g: VMWare Fusion/Workstation, Oracle virtualbox, Parallels, etc.,
+     - e.g: VMWare Fusion/Workstation, Oracle virtualbox, Parallels, etc.,
+     - these are used in Desktops & Laptops
+     - the laptop/desktop already comes with a Host OS
+     - the virtualization software is installed on top of Host OS
+     - it won't offer near native H/W performance
 </pre>
 
 ## Info - Hypervisor High Level Architecture
-<pre>  
-</pre>
+![type1](HypervisorHighLevelArchitecture.png)
+
 ## Info - Containerization Overview
 <pre>
   
