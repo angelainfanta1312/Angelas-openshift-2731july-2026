@@ -218,9 +218,9 @@ docker run -it --name ubuntu1 --hostname ubuntu1 ubuntu:latest /bin/bash
 
 Note
 <pre>
--it - stands for interactive terminal
--name - is the name of the docker container which must be unique ( lowercases preferred )
--hostname - hostname of the container
--ubuntu:latest - is the image name along with its tag/version(latest)
--/bin/bash - tells we would like to start bash terminal within the container once it starts running
+it - stands for interactive terminal
+name - is the name of the docker container which must be unique ( lowercases preferred )
+hostname - hostname of the container
+ubuntu:latest - is the image name along with its tag/version(latest)
+/bin/bash - tells we would like to start bash terminal within the container once it starts running
 </pre>
