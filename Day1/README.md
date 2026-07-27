@@ -57,6 +57,14 @@
 ## Info - Containerization Overview
 <pre>
 - this is application virtualization technology
+- is a Linux technology
+- Containerization is made possible by some of the linux kernel features
+  1. Namespace
+     - this helps us isolate one container from the other
+  2. Control Groups a.k.a CGroups
+     - this helps us apply resource quota restrications on the container level
+     - we can restrict how much maximum RAM one container can utilize at the max
+- all containers running on the same Host/Guest OS shares the underlying Host/Guest OS Hardwares
 - each container represents one application process in the OS
 - containers are not equivalent to OS
 - containers will never be able to replace an OS or virtual machine
@@ -72,7 +80,29 @@
   - Inside VM, an Operating System runs
   - Inside Container, one application will be running
   - hence, comparing Virtual Machine with a Container is technically wrong
+- Container Softwares
+  - Docker, Podman, etc.,
 </pre>
+
+## Info - Container Engine
+<pre>
+- they are high-level user-friendly softwares
+- it helps us manage container images and containers without knowing any linux kernel level knowledge
+- examples
+  - Docker, Podman, etc
+- Docker Container Engine under the hood depends on Containerd, which inturn depends on runC Container Runtime
+  to manage, Container Images and Containers
+</pre>
+
+## Info - Container Runtime
+<pre>
+- they are low-level not so user-friently utilities that manages container images and containers
+- generally, end-users like us, will never use the Container Runtime directly
+- examples
+  - runC, cRun, CRI-O, rkt(pronounced as Rocket), etc
+</pre>
+
+
 
 ## Info - Docker High Level Architecture
 <pre>
