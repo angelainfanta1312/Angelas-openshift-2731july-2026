@@ -304,3 +304,20 @@ docker inspect -f {{.NetworkSettings.Networks.brdige.IPAddress}} ubuntu3-jegan
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f9346282-7519-4160-bfb8-c16e2e01ea5f" />
 
+
+## Lab - Deleting running containers
+Deleting a container gracefully
+```
+docker ps
+docker stop ubuntu1
+docker rm ubuntu1
+```
+
+Deleting a container forcibly
+```
+docker ps
+docker rm -f ubuntu2
+docker ps
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7c1f2c37-4f5f-48f8-b040-3aa4e8f0fefd" />
