@@ -341,3 +341,28 @@ docker rm -f $(docker ps -q -f "name=jegan")
 
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/6ffbe2d3-689c-4548-8b4e-7ef61381a142" />
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/596ff720-2a09-44e3-959b-2297866982f5" />
+
+
+## Lab - Creating a Custom Docker Image
+
+Note
+<pre>
+- In order to create a custom docker image, we must create a Dockerfile with instructions in it to customize the image
+- Dockerfile is the standard filename, docker by default attempts to locate a file with name Dockerfile, and it is case-sensitive
+- In case, you have name the file with a different name, then we must tell Docker which file has the custom image build instructions
+</pre>
+
+By default, ubuntu:26.04 will not have vim editor, it will not support ifconfig command to find IP, it will not support ping command
+```
+docker run -dit --name ubuntu1-jegan --hostname ubuntu1-jegan ubuntu:26.04 /bin/bash
+docker exec -it ubuntu1-jegan /bin/bash
+
+vim
+ifconfig
+ping 8.8.8.8
+exit
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/785e7ced-48fd-4660-8f6c-5634982b59ee" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/51c0bdff-89e5-449b-8ae5-e1b66ef5412d" />
+
+Now, let's create 
