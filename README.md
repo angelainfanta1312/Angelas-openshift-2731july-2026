@@ -14,6 +14,12 @@ We have got two servers with below configurations
 - 21 TB HDD
 </pre>
 
+## Linux Login Credentials
+<pre>
+username - yourname
+password - palmeto@123
+</pre>
+
 #### Server 1 (192.168.10.200)
 ![Server1](server1.png)
 
