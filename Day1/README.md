@@ -108,6 +108,25 @@
 ## Info - Docker High Level Architecture
 ![docker](DockerHighLevelArchitecture.png)
 
+## Info - Docker Image
+<pre>
+- is a blueprint of a Docker container
+- For example, to install a Windows 11 Operating System, we download window-os11.iso file from Microsoft website
+- Using the windows-os11.iso, we can install Windows 11 on mutiple machines
+- Same way, using a single docker image, we can create any number of containers
+- For example, using nginx web server image, we can create multiple nginx webserver containers
+- Usually one Docker Image, will support one application
+</pre>  
+
+## Info - Docker Container
+<pre>
+- One Container supports one application
+- It holds your application and its dependencies ( libraries and/or web/app server )
+- Containers gets an unique name and IP address
+</pre>  
+
+
+
 ## Info - Docker Alternatives
 <pre>
   
