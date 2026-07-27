@@ -321,3 +321,23 @@ docker ps
 ```
 
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7c1f2c37-4f5f-48f8-b040-3aa4e8f0fefd" />
+
+## Lab - Deleting multiple containers that has a specific pattern in their names
+```
+docker ps
+
+# List all container IDs that has nitesh in the name
+docker ps -q -f "name=nitesh"
+
+# List all container IDs that has sriram in the name
+docker ps -q -f "name=sriram"
+
+# List all container IDs that has jegan in the name
+docker ps -q -f "name=jegan"
+
+# Delete all containers that has jegan in the container name
+docker rm -f $(docker ps -q -f "name=jegan")
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/6ffbe2d3-689c-4548-8b4e-7ef61381a142" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/596ff720-2a09-44e3-959b-2297866982f5" />
