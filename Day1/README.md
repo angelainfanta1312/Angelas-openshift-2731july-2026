@@ -172,3 +172,17 @@ newgrp docker
 docker --version
 docker images
 ```
+
+## Lab - Check your docker version
+```
+docker --version
+docker info
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/01d7a159-6cb5-4b99-b79c-b9de3a226eba" />
+
+## Lab - Listing docker images from your local docker registry
+```
+docker images
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/bcd9bb91-0016-4515-a718-3b7345c5e467" />
+
