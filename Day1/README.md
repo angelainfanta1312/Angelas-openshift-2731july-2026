@@ -48,6 +48,7 @@
      - the laptop/desktop already comes with a Host OS
      - the virtualization software is installed on top of Host OS
      - it won't offer near native H/W performance
+- each VM, represents one fully functional Operating System
 </pre>
 
 ## Info - Hypervisor High Level Architecture
@@ -55,8 +56,24 @@
 
 ## Info - Containerization Overview
 <pre>
-  
+- this is application virtualization technology
+- each container represents one application process in the OS
+- containers are not equivalent to OS
+- containers will never be able to replace an OS or virtual machine
+- in reality, both containerization and virtualization or used in combination
+- Container => Your Application + dependent libraries are bundled into an image, running instance of image is container
+- Similarities between Hypervisor and Containerization
+  - just like VMs acquire an IP address, each containers get its own IP address(most likely a Private IP address)
+  - just like VMs get its own file system (folders & files), containers also has its own filesystem
+  - just like VMs get a software defined network stack (7 OSI layers), containers also get a software defined network stack
+  - just like OS gets its own Port range, container also get its own port range 0-65535
+  - just like VMs get a virtual Network card (NIC), containers also get a virtual network card
+- In what ways VMs and Containers are different?
+  - Inside VM, an Operating System runs
+  - Inside Container, one application will be running
+  - hence, comparing Virtual Machine with a Container is technically wrong
 </pre>
+
 ## Info - Docker High Level Architecture
 <pre>
   
