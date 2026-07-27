@@ -288,3 +288,10 @@ docker start ubuntu1 ubuntu2
 docker ps
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/df7fff96-9ea9-4827-a5de-05523f6a63e0" />
+
+## Lab - Inspecting a container
+```
+docker container inspect ubuntu3-jegan
+docker inspect ubuntu3-jegan
+```
+
