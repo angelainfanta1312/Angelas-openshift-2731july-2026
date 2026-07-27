@@ -119,6 +119,7 @@
 ## Info - Docker Container
 <pre>
 - One Container supports one application
+- is a running instance of a Container Image
 - It holds your application and its dependencies ( libraries and/or web/app server )
 - Containers gets an unique name and IP address
 </pre>  
