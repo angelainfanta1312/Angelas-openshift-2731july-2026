@@ -218,6 +218,8 @@ docker run -it --name ubuntu1 --hostname ubuntu1 ubuntu:latest /bin/bash
 
 Note
 <pre>
+docker - docker client
+run - creates and start the container
 it - stands for interactive terminal
 name - is the name of the docker container which must be unique ( lowercases preferred )
 hostname - hostname of the container
