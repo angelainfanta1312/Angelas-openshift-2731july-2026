@@ -226,3 +226,22 @@ hostname - hostname of the container
 ubuntu:latest - is the image name along with its tag/version(latest)
 /bin/bash - tells we would like to start bash terminal within the container once it starts running
 </pre>
+
+When we exit the terminal from a interactively created container, it exits(stops) the container.
+
+## Lab - Create container in the background(daemon) mode
+```
+docker run -dit --name ubuntu2 --hostname ubuntu2 ubuntu:latest /bin/bash
+```
+
+Listing the running containers
+```
+docker ps
+```
+
+List all containers ( including containers that are not running )
+```
+docker ps -a
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/b0bb426e-6509-4e66-b62f-aaeb9ce2c995" />
