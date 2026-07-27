@@ -278,5 +278,13 @@ docker ps -a
 docker start ubuntu1 ubuntu2
 docker ps
 ```
-
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/e7c27623-f477-46e0-b62b-e29df05c504d" />
+
+## Lab - Stopping containers
+```
+docker ps
+docker stop ubuntu1 ubuntu2
+docker start ubuntu1 ubuntu2
+docker ps
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/eef48c46-4af8-48d0-92a8-e5bdd14b7466" />
