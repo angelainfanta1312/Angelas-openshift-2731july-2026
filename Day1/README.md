@@ -363,6 +363,49 @@ ping 8.8.8.8
 exit
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/785e7ced-48fd-4660-8f6c-5634982b59ee" />
-<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/51c0bdff-89e5-449b-8ae5-e1b66ef5412d" />
 
-Now, let's create 
+Now, let's create a Dockerfile to install the missing tools ( vim editor, ifconfig and ping utilities )
+
+```
+# Create an empty folder CustomDockerImage in your home directory
+cd ~
+mkdir -p CustomDockerImage
+cd CustomDockerImage
+```
+
+Create the Dockerfile with the below content, this will add just one image layer on top of the layers available in ubuntu:26.04
+<pre>
+FROM ubuntu:26.04
+
+RUN apt update && apt install -y vim net-tools iputils-ping # In one image layer we are installing all the tools
+</pre>
+
+Create the Dockerfile with the below content, the below image will add 3 additional layers on top of the layers available in ubuntu:26.04
+<pre>
+FROM ubuntu:26.04
+
+RUN apt update && apt install -y vim # We are adding 1 additional layer per RUN command
+RUN apt update && apt install -y net-tools  # We are adding 1 additional layer per RUN command
+RUN apt update && apt install -y iputils-ping # We are adding 1 additional layer per RUN command
+</pre>
+
+
+You can create any one of the Dockerfile shown above, I'll go with second one
+```
+cd ~/CustomDockerImage
+cat Dockerfile
+
+docker build -t myubuntu:1.0 .
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1b086283-5387-4c52-8dc4-f33de82b96e1" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/516f4561-e01d-432d-a2a5-7c025ecde54c" />
+
+Inspecting image layers
+```
+docker image inspect ubuntu:26.04
+docker image inspect myubuntu:1.0
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7fc46c38-fad0-402e-a9db-9d8d257f5f25" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/071af632-b050-49cd-bf09-a0005d936340" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/3bd6e91f-4d90-4caf-85bf-9d76a7d49069" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f06ba0c9-33f9-4fec-8ad2-1b824d462d2d" />
