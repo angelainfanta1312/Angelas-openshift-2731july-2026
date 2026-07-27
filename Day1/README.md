@@ -131,6 +131,21 @@
 - LXC
 </pre>
 
+## Info - Docker Registry
+<pre>
+- is a collection of one or more Docker Images
+- there are 3 types
+  1. Local Docker Registry
+     - this is a folder, typically in Linux /var/lib/docker
+  2. Private Docker Registry
+     - this can host your Custom Docker Images
+     - this can also host public images 
+     - this can be setup using Sonatype Nexus or JFrog Artifactory
+  3. Remote Docker Registry
+     - a.k.a Docker Hub
+     - it is a website maintained by Docker Inc organization along with Community support
+</pre>
+
 ## Info - Installting Docker Community Edition in Ubuntu
 ```
 # Add Docker's official GPG key:
