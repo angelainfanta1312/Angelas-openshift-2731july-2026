@@ -191,3 +191,11 @@ Troubleshooting Permission denied error, when it prompts for password type palme
 newgrp docker
 docker images
 ```
+
+## Lab - Download docker image from Docker Hub Remote Registry to your Local Docker Registry
+```
+docker pull hello-world:latest
+docker images
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/71a487c2-d22a-416e-9ab8-80da942f8807" />
