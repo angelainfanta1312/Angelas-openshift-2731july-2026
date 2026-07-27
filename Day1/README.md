@@ -270,3 +270,13 @@ docker ps
 ```
 
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/7e6801cf-57e3-45ae-8c89-53ff542bb44e" />
+
+
+## Lab - Starting an exited container
+```
+docker ps -a
+docker start ubuntu1 ubuntu2
+docker ps
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/e7c27623-f477-46e0-b62b-e29df05c504d" />
