@@ -186,3 +186,8 @@ docker images
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/bcd9bb91-0016-4515-a718-3b7345c5e467" />
 
+Troubleshooting Permission denied error
+```
+newgrp docker
+docker images
+```
