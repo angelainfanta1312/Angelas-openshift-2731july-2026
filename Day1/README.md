@@ -296,3 +296,11 @@ docker inspect ubuntu3-jegan
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/92c4f1a4-1850-412f-ab97-4d34baa985a5" />
 
+## Lab - Finding IP Address of a running container
+```
+docker ps
+docker inspect ubuntu3-jegan | grep IPA
+docker inspect -f {{.NetworkSettings.Networks.brdige.IPAddress}} ubuntu3-jegan
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f9346282-7519-4160-bfb8-c16e2e01ea5f" />
+
