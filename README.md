@@ -127,3 +127,15 @@ hostname -i
 ls
 exit
 ```
+
+## Lab - Pod forwarding for quick testing/debugging ( not for production )
+```
+# Terminal Tab 1
+oc get pods
+oc port-forward pod/nginx-6cffbd84c5-tj86t 9090:8080
+
+# Terminal Tab 2
+curl http://localhost:9090  # This works
+curl http://127.0.0.1:9090  # This works
+curl http://192.168.10.200:9090 # This will not work
+```
