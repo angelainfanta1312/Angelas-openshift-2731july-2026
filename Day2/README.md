@@ -100,3 +100,44 @@
 
 ## Info - Red Hat Openshift High Level Architecture
 ![openshift](openshiftArchitecture.png)
+
+
+## Info - Pod
+<pre>
+- Pod - literal english meaning is group of whales
+- From K8s/Openshift point of view, Pod is a group of related containers
+- every Pod has atleast 2 containers
+  - one will the application container
+  - the other will be secret infra hidden container called pause container
+  - pause container provides network to your application container
+- as a best practice, each Pod must have only one main application
+- for instance
+  - a Pod can weblogic as the main application
+  - another Pod can mysql as the main application
+- What is not recommended best practice for Pod 
+  - we should not create a Pod that runs weblogic in one container and mysql in another container
+- Unlike Docker, in Kubernetes/Openshift, IP address is assigned on the Pod level
+- all the containers that are part of a single Pod, shares the same IP address
+- applications will running inside one of the Pod Container
+</pre>
+
+## Info - ReplicaSet Controller
+<pre>
+- is responsible to create and manage the requested number of Pods in a stateless application deployment
+- this ensure always 3 Pods will be running in your cluster
+- if any Pod crashes, the ReplicaSet Controller find detect and fix it
+</pre>
+
+## Info - Types of applications supported by Kubernetes/Openshift Container Orchestration Platform
+<pre>
+1. Stateless applications
+2. Stateful applications
+3. Application that runs one time and stops once the work is completed
+4. Recurring Tasks
+5. Applications that must run one instance per Node within Kubernetes/Openshift cluster
+</pre>
+
+## Info - Stateless Application
+<pre>
+  
+</pre>
