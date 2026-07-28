@@ -525,3 +525,78 @@ docker run -d --name mysql-jegan --hostname mysql-jegan -e MYSQL_ROOT_PASSWORD=r
 docker ps
 ```
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/ceb21d7d-1a3f-4a8d-87f4-95879686d83f" />
+
+Let's get inside the mysql container shell, when it prompts for mysql root password, type root@123
+```
+docker exec -it mysql-jegan /bin/sh
+mysql -u root -p
+```
+
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/1e66982a-bf37-4598-9ac0-050c2058c389" />
+
+Let's create a database and create a table, insert some records into the table
+```
+CREATE DATABASE tektutor;
+SHOW DATABASES;
+USE tektutor;
+
+CREATE TABLE trainings ( id INT NOT NULL, name VARCHAR(300) NOT NULL, duration VARCHAR(300) NOT NULL, PRIMARY KEY(id) );
+INSERT INTO trainings VALUES ( 1, "DevOps", "5 Days" );
+INSERT INTO trainings VALUES ( 2, "Linux Device Drivers", "5 Days" );
+INSERT INTO trainings VALUES ( 3, "Red Hat Openshift", "5 Days" );
+SELECT * FROM trainings;
+exit
+exit
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/5d140f46-0955-4e2a-9d5b-fb5a84dbe757" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/f76db387-9f4f-4d71-bc70-09a2beec3487" />
+
+Let's delete the container, at this point you would have deleted the data also along with the container, this is the reason we must use an external storage
+to avoid data loss.
+```
+docker rm -f mysql-jegan
+```
+
+Let's create mysql-jegan container that uses an external storage to save the database and tables
+```
+mkdir -p /home/palmeto/mysql  # replace palmeto with your linux username
+
+docker run -d --name mysql-jegan --hostname mysql-jegan -e MYSQL_ROOT_PASSWORD=root@123 -v /home/palmeto/mysql:/var/lib/mysql mysql:latest
+docker ps
+
+docker exec -it mysql-jegan /bin/sh
+mysql -u root -p
+CREATE DATABASE tektutor;
+SHOW DATABASES;
+USE tektutor;
+
+CREATE TABLE trainings ( id INT NOT NULL, name VARCHAR(300) NOT NULL, duration VARCHAR(300) NOT NULL, PRIMARY KEY(id) );
+INSERT INTO trainings VALUES ( 1, "DevOps", "5 Days" );
+INSERT INTO trainings VALUES ( 2, "Linux Device Drivers", "5 Days" );
+INSERT INTO trainings VALUES ( 3, "Red Hat Openshift", "5 Days" );
+SELECT * FROM trainings;
+exit
+exit
+```
+
+Let's delete the container
+```
+docker rm -f mysql-jegan
+```
+
+Let's create a new container
+```
+docker run -d --name mysql-jegan --hostname mysql-jegan -e MYSQL_ROOT_PASSWORD=root@123 -v /home/palmeto/mysql:/var/lib/mysql mysql:latest
+docker ps
+docker exec -it mysql-jegan /bin/sh
+mysql -u root -p
+SHOW DATABASES;  # You are supposed to see the tektutor database
+USE tektutor;
+SHOW TABLES;  # You are supposed to see the trainings table
+
+SELECT * FROM trainings; # You are supposed to see 3 records
+exit
+exit
+```
+
+This example demonstrates, using external storage(volume) helps you retain data even after deleting the respective mysql container.
