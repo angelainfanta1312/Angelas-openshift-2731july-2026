@@ -92,3 +92,8 @@ Finding the IP address of the pods
 ```
 oc get pods -o wide
 ```
+
+Checking pods logs
+```
+oc logs nginx-dbfb56c96-6lqrh
+```
