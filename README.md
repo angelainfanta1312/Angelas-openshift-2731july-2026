@@ -113,3 +113,17 @@ Describing a pod to get detailed pod info
 oc describe pod/nginx-dbfb56c96-6lqrh
 ```
 
+## Lab - Getting inside a pod shell
+```
+oc rsh deploy/nginx
+hostname
+hostname -i
+ls
+exit
+
+oc rsh pod/nginx-6cffbd84c5-kgnmz
+hostname
+hostname -i
+ls
+exit
+```
