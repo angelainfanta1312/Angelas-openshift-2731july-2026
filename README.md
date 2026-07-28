@@ -97,3 +97,19 @@ Checking pods logs
 ```
 oc logs nginx-dbfb56c96-6lqrh
 ```
+
+Describing a deployment to find detailed meta-data about your application deployment
+```
+oc describe deploy/nginx
+```
+
+Describing a replicaset to find detailed meta-data bout your replicaset
+```
+oc describe rs/nginx-dbfb56c96
+```
+
+Describing a pod to get detailed pod info
+```
+oc describe pod/nginx-dbfb56c96-6lqrh
+```
+
