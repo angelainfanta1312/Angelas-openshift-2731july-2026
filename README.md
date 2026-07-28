@@ -25,3 +25,31 @@ password - palmeto@123
 
 #### Server 2 (192.168.10.201)
 ![Server2](server2.png)
+
+## Lab - Getting used to Openshift projects
+
+Listing all projects
+```
+oc get projects
+oc get project
+oc get namespaces
+oc get namespace
+oc get ns
+kubectl get namespaces
+```
+
+Creating new project
+```
+oc new-project jegan
+```
+
+Switching between projects
+```
+oc project default
+oc project jegan
+```
+
+Finding currently active project
+```
+oc project
+```
