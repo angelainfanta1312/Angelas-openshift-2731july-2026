@@ -130,14 +130,26 @@
 
 ## Info - Types of applications supported by Kubernetes/Openshift Container Orchestration Platform
 <pre>
-1. Stateless applications
-2. Stateful applications
-3. Application that runs one time and stops once the work is completed
-4. Recurring Tasks
-5. Applications that must run one instance per Node within Kubernetes/Openshift cluster
+1. Stateless applications (Deployment)
+2. Stateful applications (StatefulSet)
+3. Application that runs one time and stops once the work is completed (Job)
+4. Recurring Tasks (CronJob)
+5. Applications that must run one instance per Node within Kubernetes/Openshift cluster (DaemonSet)
 </pre>
 
 ## Info - Stateless Application
 <pre>
-  
+- let's say we deploy 3 Pods of a specific application
+- the individual Pod may or may not use database as per the application design
+- but each end-user call if is treated as fresh call, the application doesn't recognize the user, it is a stateless application
+- example
+  - google search
+</pre>
+
+## Info - Statefull application
+<pre>
+- generally all the Pods that are part of a single stateful application communicates with each
+- they run as a cluster, ie. any data updated into one Pod gets syncrhonized on other Pods automatically
+- a cluster of db instance is a good example of stateful application
+- scale up/down statefull application are technically more complex compared to scale up/down of stateless application
 </pre>
