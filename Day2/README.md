@@ -153,3 +153,14 @@
 - a cluster of db instance is a good example of stateful application
 - scale up/down statefull application are technically more complex compared to scale up/down of stateless application
 </pre>
+
+
+## Lab - Listing all nodes in our Openshift cluster
+```
+oc get nodes
+kubectl get nodes
+
+oc get nodes -o wide
+kubectl get nodes -o wide
+```
+
