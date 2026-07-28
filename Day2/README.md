@@ -296,3 +296,27 @@ curl http://localhost:9090  # This works
 curl http://127.0.0.1:9090  # This works
 curl http://192.168.10.200:9090 # This will not work
 ```
+
+## Lab - Creating a service and exposing it via route for external access
+```
+oc project jegan
+oc get deploy,rs,po
+
+# Create an internal clusterip service for nginx deployment
+oc expose deploy/nginx --type=ClusterIP --port=8080
+
+# List the services
+oc get services
+oc get service
+oc get svc
+
+# Create an external route to make it available for external access
+oc expose svc/nginx
+
+# List the routes
+oc get routes
+oc get route
+
+# Test external access
+curl http://nginx-jegan.apps.ocp4.palmeto.org
+```
