@@ -87,3 +87,8 @@ Listing many resources with single command
 oc get all
 oc get deploy,rs,po
 ```
+
+Finding the IP address of the pods
+```
+oc get pods -o wide
+```
