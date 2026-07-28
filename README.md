@@ -53,3 +53,37 @@ Finding currently active project
 ```
 oc project
 ```
+
+## Lab - Deploying your first stateless application into Openshift under your project
+```
+oc project jegan
+oc get imagestreams -n openshift | grep nginx
+oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx:1.26 --replicas=3
+```
+
+Listing all deployments in your project
+```
+oc get deployments
+oc get deployment
+oc get deploy
+```
+
+Listing all replicasets
+```
+oc get replicasets
+oc get replicaset
+oc get rs
+```
+
+Listing all pods
+```
+oc get pods
+oc get pod
+oc get po
+```
+
+Listing many resources with single command
+```
+oc get all
+oc get deploy,rs,po
+```
