@@ -164,3 +164,21 @@ oc get nodes -o wide
 kubectl get nodes -o wide
 ```
 
+## Info - How Kuberentes or Openshift is able to connect with Kubernetes/Openshift cluster
+<pre>
+- the oc/kubectl client tools locates the kubeconfig file from your home directory i.e /home/palmeto/.kube/config
+- first oc/kubectl will look for a environment variable called export KUBECONFIG=/home/palmeto/project1/myconfig, in this case it will 
+  use
+- each kubectl/oc command can use --kubeconfig switch to point to a kubeconfig file
+  the myconfig file from my home directory
+</pre>
+
+## Info - Finding more details about your node
+```
+oc describe node/master01.ocp4.palmeto.org
+oc describe node/master02.ocp4.palmeto.org
+oc describe node/master03.ocp4.palmeto.org
+oc describe node/worker01.ocp4.palmeto.org
+oc describe node/worker02.ocp4.palmeto.org
+oc describe node/worker03.ocp4.palmeto.org
+```
