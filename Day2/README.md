@@ -28,3 +28,68 @@
   7. ROSA ( Managed Red Hat Openshift from AWS )
   8. ARO ( Managed Red Hat Openshift from Azure )
 </pre>
+
+## Info - Docker SWARM
+<pre>
+- is a native container orchestration platform developed by Docker Inc organization
+- it is an opensource product
+- ideal for learning and POC
+- ideal setup for Dev/QA
+- easy to learn and easy to setup
+- lightweight 
+- but not production-grade
+</pre>
+
+## Info - Google Kubernetes
+<pre>
+- Google developed internally as borg 
+- borg container orchestration was used within Google on several complex projects
+- later, google refactored/refined it and made it as a better container orchestration platform called Kubernetes
+- Google donated the Kubernetes as a opensource project
+- it works as a cluster of many machines( called nodes )
+- the nodes can be 
+  - Physical Server
+  - Virtual Machines running on a on-prem server
+  - ec2 instance from AWS
+  - azure vm from azure
+- there are two types of nodes
+  1. Master Node ( Any Linux distribution can be installed - Ubuntu, Fedora, RHEL, etc )
+     - Control Plane Components runs only on Master node
+       1. API Server (Pod)
+       2. etcd (Pod)
+       3. Controller Managers (Pod)
+       4. Scheduler (Pod)
+  2. Worker Node ( Any Linux distribution an be installed - Ubuntu, Fedora, RHEL, etc )
+     - this is where user application willing be running
+- it is a command-line tool
+- there is no professional Dashboard ( webconsole )
+- Google Kubernetes provides adding your own custom resources and custom controllers to extend
+  Kubernetes
+- application must be packaged as a Container Image along with its dependencies in order to deploy
+  into Kubernetes(k8s)
+</pre>
+
+## Info - Red Hat Openshift
+<pre>
+- it is Red Hat's distribution of Kubernetes
+- it developed on top of opensource Google Kubernetes with many additional useful features
+- it is Kubernetes with batteries included
+- Openshift newly added features on top of Kubernetes
+  - Professional production-grade Webconsole
+  - comes with Internal Container Registry
+  - uses its own proprietary linux OS (Red Hat Enterprise Core OS) in master and worker nodes
+  - uses its own proprietary Container Runtime(CRI-O) and Container Engine (Podman)
+  - User Management ( Role Based Access Control[RBAC] )
+  - Route ( can be used to expose your application for external access )
+  - Project ( based on K8s Namespace with addition security policies applied on project level )
+  - S2I ( Source to Image - application can be deployed into Openshift from Source Code )
+- Red Hat Openshift 3.x supported docker as the default container engine
+- Starting from Red Hat Openshift 4.x, they removed support for docker, instead it got replaced with Podman & CRI-O
+- Starting from Red Hat Openshift 4.x, master nodes only supports Red Hat Enterprise Core OS (RHCOS) as the Operating System 
+- Starting from Red Hat Openshift 4.x, worker nodes can choose between RHEL or RHCOS
+- Red Hat acquired a company named CoreOS that had 2 interesting products
+  1. CoreOS Operating System (minimal linux that is secured, has everything Container Orchestration Platform requires )
+  2. rkt ( pronounced as Rocket Container Runtime )
+  3. Network Fabric called flannel
+- it also comes with world-wide support from Red Hat ( an IBM company )
+</pre>
