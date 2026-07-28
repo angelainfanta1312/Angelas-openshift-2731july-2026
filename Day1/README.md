@@ -598,5 +598,8 @@ SELECT * FROM trainings; # You are supposed to see 3 records
 exit
 exit
 ```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/469dba32-8ec9-4f5a-aa5b-1fac35b5a93e" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/ed5212f2-0f9e-40c1-b22e-d25a58787b43" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/cb4c46ef-4b02-42e4-98ad-7102fba4422e" />
 
 This example demonstrates, using external storage(volume) helps you retain data even after deleting the respective mysql container.
