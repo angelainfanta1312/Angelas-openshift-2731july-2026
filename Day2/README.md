@@ -93,3 +93,10 @@
   3. Network Fabric called flannel
 - it also comes with world-wide support from Red Hat ( an IBM company )
 </pre>
+
+
+## Info - Kubernetes High Level Architecture
+![kubernetes](KubernetesArchitecture2.png)
+
+## Info - Red Hat Openshift High Level Architecture
+![openshift](openshiftArchitecture.png)
