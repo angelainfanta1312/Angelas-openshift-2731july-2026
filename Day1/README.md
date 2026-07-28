@@ -516,3 +516,12 @@ curl --k http://localhost:8080
 curl --k http://localhost:8080
 curl --k http://localhost:8080
 ```
+
+## Lab - Volume Mounting
+
+Let's create a mysql db server container that stores data within the container storage ( no external storage )
+```
+docker run -d --name mysql-jegan --hostname mysql-jegan -e MYSQL_ROOT_PASSWORD=root@123 mysql:latest
+docker ps
+```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/ceb21d7d-1a3f-4a8d-87f4-95879686d83f" />
