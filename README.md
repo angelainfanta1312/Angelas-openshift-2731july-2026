@@ -11,7 +11,7 @@ We have got two servers with below configurations
 - Dell PowerEdge R840 Server
 - Intel Xeon Processor with 192 CPU Cores
 - 1 TB RAM
-- 21 TB HDD
+- 21 TB SSD
 </pre>
 
 ## Linux Login Credentials
