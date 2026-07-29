@@ -93,3 +93,230 @@
   3. Network Fabric called flannel
 - it also comes with world-wide support from Red Hat ( an IBM company )
 </pre>
+
+
+## Info - Kubernetes High Level Architecture
+![kubernetes](KubernetesArchitecture2.png)
+
+## Info - Red Hat Openshift High Level Architecture
+![openshift](openshiftArchitecture.png)
+
+
+## Info - Pod
+<pre>
+- Pod - literal english meaning is group of whales
+- From K8s/Openshift point of view, Pod is a group of related containers
+- every Pod has atleast 2 containers
+  - one will the application container
+  - the other will be secret infra hidden container called pause container
+  - pause container provides network to your application container
+- as a best practice, each Pod must have only one main application
+- for instance
+  - a Pod can weblogic as the main application
+  - another Pod can mysql as the main application
+- What is not recommended best practice for Pod 
+  - we should not create a Pod that runs weblogic in one container and mysql in another container
+- Unlike Docker, in Kubernetes/Openshift, IP address is assigned on the Pod level
+- all the containers that are part of a single Pod, shares the same IP address
+- applications will running inside one of the Pod Container
+</pre>
+
+## Info - ReplicaSet Controller
+<pre>
+- is responsible to create and manage the requested number of Pods in a stateless application deployment
+- this ensure always 3 Pods will be running in your cluster
+- if any Pod crashes, the ReplicaSet Controller find detect and fix it
+</pre>
+
+## Info - Types of applications supported by Kubernetes/Openshift Container Orchestration Platform
+<pre>
+1. Stateless applications (Deployment)
+2. Stateful applications (StatefulSet)
+3. Application that runs one time and stops once the work is completed (Job)
+4. Recurring Tasks (CronJob)
+5. Applications that must run one instance per Node within Kubernetes/Openshift cluster (DaemonSet)
+</pre>
+
+## Info - Stateless Application
+<pre>
+- let's say we deploy 3 Pods of a specific application
+- the individual Pod may or may not use database as per the application design
+- but each end-user call if is treated as fresh call, the application doesn't recognize the user, it is a stateless application
+- example
+  - google search
+</pre>
+
+## Info - Stateful application
+<pre>
+- generally all the Pods that are part of a single stateful application communicates with each
+- they run as a cluster, ie. any data updated into one Pod gets syncrhonized on other Pods automatically
+- a cluster of db instance is a good example of stateful application
+- scale up/down statefull application are technically more complex compared to scale up/down of stateless application
+</pre>
+
+
+## Lab - Listing all nodes in our Openshift cluster
+```
+oc get nodes
+kubectl get nodes
+
+oc get nodes -o wide
+kubectl get nodes -o wide
+```
+
+## Info - How Kuberentes or Openshift is able to connect with Kubernetes/Openshift cluster
+<pre>
+- the oc/kubectl client tools locates the kubeconfig file from your home directory i.e /home/palmeto/.kube/config
+- first oc/kubectl will look for a environment variable called export KUBECONFIG=/home/palmeto/project1/myconfig, in this case it will 
+  use
+- each kubectl/oc command can use --kubeconfig switch to point to a kubeconfig file
+  the myconfig file from my home directory
+</pre>
+
+## Info - Finding more details about your node
+```
+oc describe node/master01.ocp4.palmeto.org
+oc describe node/master02.ocp4.palmeto.org
+oc describe node/master03.ocp4.palmeto.org
+oc describe node/worker01.ocp4.palmeto.org
+oc describe node/worker02.ocp4.palmeto.org
+oc describe node/worker03.ocp4.palmeto.org
+```
+
+## Lab - Getting used to Openshift projects
+
+Listing all projects
+```
+oc get projects
+oc get project
+oc get namespaces
+oc get namespace
+oc get ns
+kubectl get namespaces
+```
+
+Creating new project
+```
+oc new-project jegan
+```
+
+Switching between projects
+```
+oc project default
+oc project jegan
+```
+
+Finding currently active project
+```
+oc project
+```
+
+## Lab - Deploying your first stateless application into Openshift under your project
+```
+oc project jegan
+oc get imagestreams -n openshift | grep nginx
+oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx:1.26 --replicas=3
+```
+
+Listing all deployments in your project
+```
+oc get deployments
+oc get deployment
+oc get deploy
+```
+
+Listing all replicasets
+```
+oc get replicasets
+oc get replicaset
+oc get rs
+```
+
+Listing all pods
+```
+oc get pods
+oc get pod
+oc get po
+```
+
+Listing many resources with single command
+```
+oc get all
+oc get deploy,rs,po
+```
+
+Finding the IP address of the pods
+```
+oc get pods -o wide
+```
+
+Checking pods logs
+```
+oc logs nginx-dbfb56c96-6lqrh
+```
+
+Describing a deployment to find detailed meta-data about your application deployment
+```
+oc describe deploy/nginx
+```
+
+Describing a replicaset to find detailed meta-data bout your replicaset
+```
+oc describe rs/nginx-dbfb56c96
+```
+
+Describing a pod to get detailed pod info
+```
+oc describe pod/nginx-dbfb56c96-6lqrh
+```
+
+## Lab - Getting inside a pod shell
+```
+oc rsh deploy/nginx
+hostname
+hostname -i
+ls
+exit
+
+oc rsh pod/nginx-6cffbd84c5-kgnmz
+hostname
+hostname -i
+ls
+exit
+```
+
+## Lab - Pod forwarding for quick testing/debugging ( not for production )
+```
+# Terminal Tab 1
+oc get pods
+oc port-forward pod/nginx-6cffbd84c5-tj86t 9090:8080
+
+# Terminal Tab 2
+curl http://localhost:9090  # This works
+curl http://127.0.0.1:9090  # This works
+curl http://192.168.10.200:9090 # This will not work
+```
+
+## Lab - Creating a service and exposing it via route for external access
+```
+oc project jegan
+oc get deploy,rs,po
+
+# Create an internal clusterip service for nginx deployment
+oc expose deploy/nginx --type=ClusterIP --port=8080
+
+# List the services
+oc get services
+oc get service
+oc get svc
+
+# Create an external route to make it available for external access
+oc expose svc/nginx
+
+# List the routes
+oc get routes
+oc get route
+
+# Test external access
+curl http://nginx-jegan.apps.ocp4.palmeto.org
+```
