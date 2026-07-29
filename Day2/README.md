@@ -146,7 +146,7 @@
   - google search
 </pre>
 
-## Info - Statefull application
+## Info - Stateful application
 <pre>
 - generally all the Pods that are part of a single stateful application communicates with each
 - they run as a cluster, ie. any data updated into one Pod gets syncrhonized on other Pods automatically
