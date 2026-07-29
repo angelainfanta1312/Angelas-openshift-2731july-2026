@@ -22,3 +22,10 @@ oc create -f nginx-deploy.yml --save-config=true
 
 oc get deploy,rs,po
 ```
+
+## Info - What happens internally when we run the below command
+```
+oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx:1.26 --replicas=3
+```
+
+
