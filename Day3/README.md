@@ -138,7 +138,7 @@ oc get svc
 oc describe svc/nginx
 ```
 
-Testing the nodeport service
+Testing the nodeport service, the port 32053 is opened on all nodes
 ```
 oc get nodes
 
