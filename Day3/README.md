@@ -27,5 +27,5 @@ oc get deploy,rs,po
 ```
 oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx:1.26 --replicas=3
 ```
-
+![internals](openshift-internals.png)
 
