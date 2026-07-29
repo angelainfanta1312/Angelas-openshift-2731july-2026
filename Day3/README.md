@@ -194,3 +194,30 @@ curl http://worker03.ocp4.palmeto.org:32053
 - Storage Controller, scans the Openshift cluster looking for a matching PV as per the attributes requested by PVC,
   if it finds one, it will let the PVC claim and use that PV
 </pre>
+
+## Lab - Deploying wordpress mysql multi-pod application that uses Persistent Volume and Claim
+
+Clone the training repository
+```
+cd ~
+git clone https://github.com/tektutor/openshift-2731july-2026.git
+```
+
+Deploying wordpress and mysql multi-pod application. Make sure you have replace 'jegan' with your linux user in 
+mysql-pv.yml mysql-pvc.yml mysql-deploy.yml wordpress-pv.yml wordpress-pvc.yml wordpress-deploy.yml
+
+And update the NFS Server IP to 192.168.10.201 in case you are working in server2
+```
+oc project jegan
+
+cd Day3/wordpress-with-configmaps-and-secrets
+./deploy.sh
+
+oc get pods
+oc get pv,pvc
+oc get svc
+oc get route
+```
+
+Using the route url, from lab machine web browser you can access the wordpress blog page.
+
