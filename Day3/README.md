@@ -97,8 +97,23 @@ oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/
 ```
 ![internals](openshift-internals.png)
 
+## Info - Kubernetes/Openshift Service
+<pre>
+- represents a group of load-balanced pods from a single deployment
+- service has a unique name and IP address
+- service can be accessed by its name or using its IP Address
+- when a service is accessed using its name, the dns within Openshift supports service discovery (i.e translates service name to 
+  service IP )
+- kube-proxy that runs in every node provides inbuilt load-balancing within Kubernetes and Openshift
+- there are 3 types of services supported in Kubernetes/Openshift
+  1. ClusterIP Internal Service
+  2. NodePort External Service
+  3. LoadBalancer External Service
+</pre>
 
 ## Lab - Creating an internal service for nginx deployment in declarative style
+The practical use-case for internal service - database access should be restricted only with the Openshift cluster.
+So pods running within the same openshift cluster can only access this type of service.
 ```
 oc project jegan
 
@@ -150,3 +165,32 @@ curl http://worker02.ocp4.palmeto.org:32053
 curl http://worker03.ocp4.palmeto.org:32053
 ```
 
+## Info - Persistent Volume (PV)
+<pre>
+- this is the external disk, Openshift administrators will be creating using NFS, NAS, SAN, S3 bucket, Longhorn, etc.,  
+- Usually it has the below attributes
+  - Size in MiB/GiB/TiB
+  - Access Mode
+    - ReadWriteOnce ( all pods from a single node can access this disk )
+    - ReadWriteMany ( all pods from all nodes can access this disk )
+  - StorageClass (optional)
+    - is a way, the Persistent Volume can be dynamically provisioned
+    - For instance, the Openshift Administrators can create a StorageClass for NFs, AWS S3 bucket, etc.,
+    - Whenever some application is requesting for Persistent Volume of a particular type of Storageclass, if
+      there is a corresponding storageclass it will automatically provision that Persistent Volume 
+- created in the cluster scope, means any application running on any project namespace can claim and use it
+</pre>
+
+## Info - Persistent Volume Claim (PVC)
+<pre>
+- this is created by dev/qa/devops teams 
+- this is project scoped, only applications within the same project can access the PVC
+- the below attributes are expected in the PVC
+  - Size in MiB/GiB/TiB
+  - Access Mode
+    - ReadWriteOnce ( all pods from a single node can access this disk )
+    - ReadWriteMany ( all pods from all nodes can access this disk )
+  - StorageClass
+- Storage Controller, scans the Openshift cluster looking for a matching PV as per the attributes requested by PVC,
+  if it finds one, it will let the PVC claim and use that PV
+</pre>
