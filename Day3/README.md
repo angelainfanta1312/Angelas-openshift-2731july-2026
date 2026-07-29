@@ -111,6 +111,16 @@ oc get svc
 oc describe svc/nginx
 ```
 
+In order to test our nginx internal service, let's create a test pod with hello image
+```
+oc create deploy hello --image=image-registry.openshift-image-registry.svc:5000/openshift/hello:1.0
+oc get pods
+
+oc rsh pod/hello-65b55c7964-vwgv7
+curl http://nginx:8080
+exit
+```
+
 ## Lab - Creating an external nodeport service for nginx deployment in declarative style
 ```
 oc project jegan
@@ -126,5 +136,17 @@ oc expose deploy/nginx --type=NodePort --port=8080 --dry-run=client -o yaml > ng
 oc apply -f nginx-nodeport-svc.yml
 oc get svc
 oc describe svc/nginx
+```
+
+Testing the nodeport service
+```
+oc get nodes
+
+curl http://master01.ocp4.palmeto.org:32053
+curl http://master02.ocp4.palmeto.org:32053
+curl http://master03.ocp4.palmeto.org:32053
+curl http://worker01.ocp4.palmeto.org:32053
+curl http://worker02.ocp4.palmeto.org:32053
+curl http://worker03.ocp4.palmeto.org:32053
 ```
 
