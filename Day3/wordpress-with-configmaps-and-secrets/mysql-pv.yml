@@ -4,6 +4,7 @@ metadata:
   name: mysql-pv-jegan # Replace 'jegan' with your name
   labels:
     name: jegan  # Replace 'jegan' with your name
+    app: mysql
 spec:
   capacity:
     storage: 100Mi
