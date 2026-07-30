@@ -330,3 +330,24 @@ oc get svc
 # From Lab machine web browser, access the training calendar application
 http://master01.ocp4.palmeto.org:30080/
 ```
+
+## Lab - LoadBalancer Service
+
+Note
+<pre>
+- The loadbalancer service is used to spin-up an external loadbalancer like AWS ALB, Azure Loadbalancer
+- Since our Openshift is installed in a bare-metal local service, loadbalancer will not work by design
+- If at all, you wanted to enable support for LoadBalancer service in a local Openshift setup, we need to use MetalLB Operator
+</pre>
+
+Let's create a loadbalancer service
+```
+oc project jegan
+
+oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx --replicas=3
+oc expose deploy/nginx --type=LoadBalancer --port=8080
+oc get svc
+
+curl http://lb-service-external-ip:8080
+curl http://192.168.100.50:8080
+```
