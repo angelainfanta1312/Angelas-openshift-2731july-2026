@@ -238,3 +238,39 @@ Using the route url, from lab machine web browser you can access the wordpress b
 - Using the Helm chart one can deploy the application without worrying about the sequence or internal complications
 - Helm takes care of all the dependencies and it follow the correct order while deploying/un-deploying applications
 </pre>
+
+## Lab - Packaging wordpress, mysql multipod application as helm chart and deploying into Openshift
+```
+cd ~
+mkdir -p wordress-helm-chart/scripts
+cd wordpress-helm-chart/scripts
+cp -R ~/openshift-2731july-2026/Day3/wordpress-with-configmaps-and-secret .
+cd ..
+
+helm create wordpress
+cd wordpress/templates
+rm -rf *
+cp ../../scripts/* .
+cd ../..
+echo "" > values.yaml
+cd ..
+
+helm package wordpress
+
+ls -l
+
+oc new-project jegan
+helm install wordpress wordpress-0.1.0.tgz
+
+helm list
+
+oc get pods
+oc get svc
+oc get pv,pvc
+oc get route
+```
+
+From your lab machine web browser, you may access wordpress now
+```
+http://wordpress-jegan.apps.ocp4.palmeto.org/
+```
