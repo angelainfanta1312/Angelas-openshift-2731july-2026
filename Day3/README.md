@@ -344,7 +344,7 @@ Let's create a loadbalancer service
 ```
 oc project jegan
 
-oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx --replicas=3
+oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx:1.26 --replicas=3
 oc expose deploy/nginx --type=LoadBalancer --port=8080
 oc get svc
 
