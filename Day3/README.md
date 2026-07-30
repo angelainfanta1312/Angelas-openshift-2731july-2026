@@ -351,3 +351,4 @@ oc get svc
 curl http://lb-service-external-ip:8080
 curl http://192.168.100.50:8080
 ```
+
