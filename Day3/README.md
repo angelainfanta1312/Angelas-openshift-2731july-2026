@@ -250,7 +250,7 @@ cd ..
 helm create wordpress
 cd wordpress/templates
 rm -rf *
-cp ../../scripts/* .
+cp ../../scripts/*.yml .
 cd ../..
 echo "" > values.yaml
 cd ..
