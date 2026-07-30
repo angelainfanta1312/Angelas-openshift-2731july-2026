@@ -55,3 +55,25 @@ curl --insecure https://nginx-jegan.apps.ocp4.palmeto.org
   - behind Route there will only one Service normally (100% routes to single service )
   - behing an Ingress there will be multiple Services
 </pre>
+
+## Lab - Ingress
+Let's delete and recreate a new project
+```
+oc delete project jegan-project
+oc new-project jegan-project
+
+cd ~/openshift-2731july-2026
+git pull
+cd Day4/ingress
+oc apply -f nginx-deploy.yml
+oc apply -f hello-deploy.yml
+oc apply -f nginx-svc.yml
+oc apply -f hello-svc.yml
+oc describe svc/nginx
+oc describe svc/hello
+oc apply -f ingress.yml
+oc get ingress
+
+curl http://tektutor.apps.ocp4.palmeto.org/hello
+curl http://tektutor.apps.ocp4.palmeto.org/nginx
+```
