@@ -26,3 +26,32 @@ oc create route edge --service nginx --hostname nginx-jegan.apps.ocp4.palmeto.or
 oc get route
 curl --insecure https://nginx-jegan.apps.ocp4.palmeto.org
 ```
+
+
+## Info - Ingress
+<pre>
+- is not service ( not a service like ClusterIP, NodePort or LoadBalancer )
+- it is routing/forwarding rules
+- For ingress to work in your Kubernetes/Openshift cluster, we need 3 things
+  1. Ingress rule
+     - annotation in the yaml file must mention which Ingress Controller must be used
+  2. Ingress Controller
+     - example
+       - Nginx Ingress Controller
+       - HAProxy Ingress Controller
+       - F5 Ingress Controller
+  3. Load Balancer
+     - Nginx Load Balancer
+     - HAProxy Load Balancer
+     - F5 Load Balancer
+- The Ingress Controller installed in your Openshift cluster keeps watching for Ingress rules defined in any project namespace
+- As soon as the Ingress Controller detected an ingress rule, the Ingress Controller retrieves the rules
+  defined in the Ingress, and it configures the respective Load Balancer with those rules dynamically at runtime
+- Behind the Ingress there will be multiple services ( ClusterIP, NodePort & LoadBalancer )
+- Behind Service -> there will be many Pods 
+- Behind Ingress -> there will be many services ( internal, external )
+- The Openshift route is based on Kubernetes Ingress
+- the difference between Ingress and OpenShift Route is
+  - behind Route there will only one Service normally (100% routes to single service )
+  - behing an Ingress there will be multiple Services
+</pre>
