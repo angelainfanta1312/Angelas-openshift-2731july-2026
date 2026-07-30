@@ -280,5 +280,5 @@ Once you are done with this exercise, you may uninstall wordpress using helm
 helm list
 helm uninstall wordpress
 
-oc get deploy,rs,po,pv,pvc,svc,route
+oc get deploy,rs,po,pv,pvc,svc,route, configmaps, secrets
 ```
