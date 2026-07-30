@@ -282,3 +282,72 @@ helm uninstall wordpress
 
 oc get deploy,rs,po,pv,pvc,svc,route, configmaps, secrets
 ```
+
+## Lab - Kubernetes/Openshift Operator
+
+<pre>
+- Custom Resource can be added in Kubernetes/Openshift by adding CustomResourceDefinition ( CRD )
+- To manage Custom Resource, we also need to supply our own Controller
+- The combination of one or more Custom Resources + one or more Custom Controller = Kubernetes/Openshift Operator
+</pre>
+
+```
+cd ~/openshift-2731july-2026
+git pull
+cd Day3/training-operator
+
+oc new-project jegan
+cd crd
+cat training-crd.yaml
+
+# Openshift will report, no such resource called trainings
+oc get trainings
+oc get training
+oc get tr
+
+oc apply -f training-crd.yaml
+
+# Openshift will recognize training resource now
+oc get trainings
+oc get training
+oc get tr
+
+# Let's create some training resources
+cat sample-trainings.yaml
+oc apply -f sample-trainings.yaml
+
+oc get trainings
+oc get training
+oc get tr
+
+oc apply -f pvc.yaml
+oc apply -f rbac.yaml
+oc apply -f controller-deployment.yaml
+
+oc apply -f webapp-deployment.yaml
+oc get svc
+
+# From Lab machine web browser, access the training calendar application
+http://master01.ocp4.palmeto.org:30080/
+```
+
+## Lab - LoadBalancer Service
+
+Note
+<pre>
+- The loadbalancer service is used to spin-up an external loadbalancer like AWS ALB, Azure Loadbalancer
+- Since our Openshift is installed in a bare-metal local service, loadbalancer will not work by design
+- If at all, you wanted to enable support for LoadBalancer service in a local Openshift setup, we need to use MetalLB Operator
+</pre>
+
+Let's create a loadbalancer service
+```
+oc project jegan
+
+oc create deploy nginx --image=image-registry.openshift-image-registry.svc:5000/openshift/bitnami-nginx:1.26 --replicas=3
+oc expose deploy/nginx --type=LoadBalancer --port=8080
+oc get svc
+
+curl http://lb-service-external-ip:8080
+curl http://192.168.100.50:8080
+```
