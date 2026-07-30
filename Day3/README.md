@@ -221,3 +221,20 @@ oc get route
 
 Using the route url, from lab machine web browser you can access the wordpress blog page.
 
+
+## Info - Helm
+<pre>
+- is a package manager for Kubernetes and Openshift Container Orchestration Platform
+- when you deploy an application in declarative style, we end up writing multiple yaml manifest scripts
+- those Openshift manifest scripts must be applied following a particular sequence while deploying, while
+  undeploying we need to follow reverse order, otherwise it takes several attempts before you can successfully
+  deploy/undeploy your application and you will end wasting lot of debug time
+- Helm package manager, relieves us from this problem
+- Helm package manager is a tool created for Kubernetes & Openshift, hence it know all the resource types
+  supported by Kubernetes and Openshift
+- Helm also know what is the sequence resources must be created while deploying applications, also it knows
+  in which order resources must be deleted while undeploying the applicaiton
+- Our applications can be packaged as Helm charts to deploy them into Kubernetes/Openshift
+- Using the Helm chart one can deploy the application without worrying about the sequence or internal complications
+- Helm takes care of all the dependencies and it follow the correct order while deploying/un-deploying applications
+</pre>
