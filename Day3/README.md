@@ -274,3 +274,11 @@ From your lab machine web browser, you may access wordpress now
 ```
 http://wordpress-jegan.apps.ocp4.palmeto.org/
 ```
+
+Once you are done with this exercise, you may uninstall wordpress using helm
+```
+helm list
+helm uninstall wordpress
+
+oc get deploy,rs,po,pv,pvc,svc,route
+```
