@@ -1,0 +1,209 @@
+Part 2 – Kubernetes
+1. What is Kubernetes?
+Kubernetes (K8s) is a container orchestration platform that automates deployment, scaling, networking, health monitoring and lifecycle management of containerized applications.
+OpenShift is built on top of Kubernetes and extends it with enterprise features such as security, routes, image streams, operators and integrated CI/CD.
+2. Kubernetes Architecture
+Control Plane (Master Nodes)
+Responsible for managing the cluster.
+Components include:
+API Server
+Scheduler
+Controller Manager
+etcd (stores cluster state)
+Worker Nodes
+Responsible for running applications.
+Each worker contains:
+kubelet
+kube-proxy
+Container Runtime (CRI-O in OpenShift)
+Pods
+3. Kubernetes Objects
+Everything in Kubernetes is represented as an object.
+Common objects:
+Pod
+ReplicaSet
+Deployment
+Service
+ConfigMap
+Secret
+PersistentVolume
+PersistentVolumeClaim
+StatefulSet
+DaemonSet
+Job
+CronJob
+Namespace
+These objects are usually created declaratively using YAML.
+4. Pods
+A Pod is the smallest deployable unit in Kubernetes.
+A pod may contain:
+One application container
+Multiple helper (sidecar) containers
+All containers inside a pod share:
+Network namespace
+IP address
+localhost communication
+Volumes
+Pods are ephemeral.
+If deleted, Kubernetes creates a new pod.
+Never depend on pod lifetime.
+5. Pod Lifecycle
+Typical flow:
+Pending
+    ↓
+ContainerCreating
+    ↓
+Running
+    ↓
+Succeeded / Failed
+Pods are recreated rather than repaired.
+6. ReplicaSet
+Purpose:
+Maintain desired number of pod replicas.
+Example:
+Desired replicas = 3
+If one pod crashes
+ReplicaSet automatically creates another.
+ReplicaSet only maintains count.
+Deployment manages ReplicaSets.
+7. Deployment
+Deployment manages ReplicaSets.
+Relationship:
+Deployment
+      │
+      ├── ReplicaSet-1
+      │       ├── Pod
+      │       ├── Pod
+      │       └── Pod
+      │
+      └── ReplicaSet-2
+              ├── Pod
+              └── Pod
+Trainer note:
+Deployment → One-to-Many → ReplicaSets
+ReplicaSet → One-to-Many → Pods
+Think of it like a tree.
+8. Declarative vs Imperative
+Trainer strongly recommended:
+Always use Declarative style.
+Imperative
+kubectl run
+kubectl expose
+Declarative
+deployment.yaml
+service.yaml
+
+kubectl apply -f deployment.yaml
+Advantages
+Version controlled
+Repeatable
+Git friendly
+CI/CD friendly
+9. YAML Best Practices
+YAML is indentation sensitive.
+Even one extra space may fail parsing.
+Generate YAML whenever possible instead of writing from scratch.
+10. Labels & Selectors
+Labels are key-value pairs attached to resources.
+Example
+app=payment
+
+env=prod
+
+team=cps
+Selectors use labels to identify resources.
+ReplicaSets and Services locate Pods using selectors.
+11. Namespaces
+Namespaces logically isolate resources.
+Example:
+default
+
+payments
+
+openshift-etcd
+
+kube-system
+Resources with same name can exist in different namespaces.
+12. Services
+Pods are temporary.
+Services provide stable communication.
+Types covered in training:
+ClusterIP
+Default.
+Accessible only inside cluster.
+Used for:
+Microservice communication
+App → Database
+NodePort
+Exposes service on every node.
+<Node-IP>:<NodePort>
+Even if Pod moves,
+NodePort remains accessible.
+Trainer command
+oc describe svc <service-name>
+shows allocated NodePort.
+LoadBalancer
+Mostly used in managed OpenShift (AWS/Azure).
+Cloud provider allocates external IP.
+In bare-metal environments,
+MetalLB Operator is required.
+13. Kubernetes Scheduling
+Developer does NOT decide which node runs a pod.
+Scheduler decides automatically.
+When scaling,
+Pods may land on different nodes.
+14. Why Applications Should Not Store Data Inside Pods
+Pods are temporary.
+If a pod is deleted,
+its filesystem is lost.
+Persistent data should always be stored externally.
+Examples:
+Database
+Persistent Volume
+Object Storage
+15. Stateless vs Stateful
+Stateless
+Examples:
+REST APIs
+Payment APIs
+Frontend
+Any replica can serve requests.
+Pods can be replaced anytime.
+Stateful
+Examples:
+Databases
+Kafka
+MongoDB
+MySQL
+Need persistent identity and storage.
+Use StatefulSets.
+16. StatefulSet (Trainer Discussion)
+Used when:
+Stable Pod names required
+Persistent storage required
+Ordered startup/shutdown required
+Example:
+mysql-0
+
+mysql-1
+
+mysql-2
+Trainer demonstrated WordPress + MySQL.
+Only one pod can acquire ReadWriteOnce PVC at a time.
+Scaling requires StatefulSets.
+17. Kubernetes Best Practices
+Never depend on Pod IP.
+Never store application state inside Pods.
+Use Deployments for stateless apps.
+Use StatefulSets for stateful apps.
+Everything should be managed through YAML.
+Prefer declarative deployments.
+Label resources properly.
+Services communicate using selectors.
+Pods are disposable.
+Trainer Nuggets:
+"Think of Deployment → ReplicaSet → Pods as a tree."
+"Always follow declarative style."
+"YAML is strict with indentation."
+"Developer should not care where the pod runs; Kubernetes scheduler decides."
+"Pods are cattle, not pets."
