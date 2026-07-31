@@ -1,0 +1,646 @@
+# Part 8 – CI/CD (Continuous Integration & Continuous Deployment)
+
+---
+
+# 1. What is CI/CD?
+
+CI/CD automates the process of building, testing and deploying applications.
+
+Instead of manually deploying applications, changes flow automatically through a pipeline.
+
+Typical flow:
+
+```
+Developer
+    ↓
+Git Repository
+    ↓
+Build
+    ↓
+Test
+    ↓
+Container Image
+    ↓
+Registry
+    ↓
+OpenShift Deployment
+```
+
+Benefits:
+
+- Faster deployments
+- Reduced manual effort
+- Consistent releases
+- Easier rollback
+- Better quality
+
+---
+
+# 2. Continuous Integration (CI)
+
+Continuous Integration focuses on integrating code changes frequently.
+
+Typical activities:
+
+- Source Code Checkout
+- Compilation
+- Unit Testing
+- Static Code Analysis
+- Artifact Generation
+
+Example:
+
+```
+Developer
+
+↓
+
+Git Commit
+
+↓
+
+Jenkins
+
+↓
+
+Maven Build
+
+↓
+
+JAR Generated
+```
+
+---
+
+# 3. Continuous Deployment (CD)
+
+Continuous Deployment focuses on deploying the built artifact.
+
+Typical activities:
+
+```
+JAR
+
+↓
+
+Container Image
+
+↓
+
+Registry
+
+↓
+
+OpenShift
+
+↓
+
+Pods
+```
+
+---
+
+# 4. CI/CD in OpenShift
+
+OpenShift supports automated builds and deployments.
+
+Main components:
+
+- BuildConfig
+- ImageStreams
+- Deployment
+- Build Pods
+- Image Registry
+
+---
+
+# 5. BuildConfig
+
+BuildConfig tells OpenShift **how an image should be built.**
+
+It defines:
+
+- Source repository
+- Build strategy
+- Output image
+- Build triggers
+
+---
+
+# 6. Build Strategies
+
+OpenShift supports three major build strategies.
+
+---
+
+## Docker Strategy
+
+Uses a Dockerfile.
+
+Flow:
+
+```
+Git
+
+↓
+
+Dockerfile
+
+↓
+
+Docker Build
+
+↓
+
+Image
+
+↓
+
+Registry
+```
+
+Advantages:
+
+- Complete control
+- Enterprise standard
+- Recommended by Trainer
+
+---
+
+## Source-to-Image (S2I)
+
+Only source code is provided.
+
+OpenShift automatically:
+
+- Downloads dependencies
+- Compiles application
+- Creates image
+
+Flow:
+
+```
+Source Code
+
+↓
+
+Builder Image
+
+↓
+
+Application Image
+```
+
+Advantages:
+
+- Simple
+- Minimal configuration
+
+Limitations:
+
+- Less customization
+- Not ideal for complex enterprise applications
+
+---
+
+## Binary Strategy
+
+Developer uploads
+
+```
+jar
+
+war
+
+zip
+```
+
+OpenShift creates image using binary artifact.
+
+Flow:
+
+```
+JAR
+
+↓
+
+BuildConfig
+
+↓
+
+Container Image
+```
+
+Useful when another CI server already builds the application.
+
+---
+
+# 7. Which Strategy Should We Use?
+
+Trainer Recommendation:
+
+Docker Strategy
+
+Reason:
+
+- Better control
+- Cleaner runtime image
+- Enterprise friendly
+
+---
+
+# 8. Build Pods
+
+Every OpenShift build runs inside a temporary Build Pod.
+
+Flow:
+
+```
+Source Code
+
+↓
+
+Build Pod
+
+↓
+
+Container Image
+
+↓
+
+Registry
+```
+
+After build completion,
+
+the Build Pod is deleted.
+
+---
+
+# 9. Image Registry
+
+After successful build,
+
+image is pushed to the Registry.
+
+Flow:
+
+```
+Build Pod
+
+↓
+
+Registry
+
+↓
+
+Deployment
+```
+
+Images can later be pulled by Deployments.
+
+---
+
+# 10. ImageStreams
+
+ImageStreams track image versions.
+
+Benefits:
+
+- Version management
+- Automatic deployment triggers
+- Easier rollback
+
+Instead of directly using Docker images,
+
+OpenShift tracks ImageStream versions.
+
+---
+
+# 11. Deployment Trigger
+
+When a new image is available,
+
+OpenShift automatically updates Deployments.
+
+Flow:
+
+```
+New Image
+
+↓
+
+ImageStream Updated
+
+↓
+
+Deployment Triggered
+
+↓
+
+New Pods Created
+```
+
+---
+
+# 12. Helm
+
+Helm is the package manager for Kubernetes.
+
+Instead of deploying many YAML files individually,
+
+Helm packages them together.
+
+Components:
+
+```
+Chart.yaml
+
+values.yaml
+
+templates/
+
+charts/
+```
+
+---
+
+# 13. Helm Chart
+
+A Helm Chart contains everything required to deploy an application.
+
+Typical structure:
+
+```
+Chart
+
+↓
+
+Deployment
+
+↓
+
+Service
+
+↓
+
+PVC
+
+↓
+
+ConfigMap
+
+↓
+
+Secret
+```
+
+---
+
+# 14. values.yaml
+
+Stores configurable values.
+
+Example:
+
+```
+replicas: 3
+
+image: receiver
+
+tag: latest
+
+port: 8080
+```
+
+Changing values.yaml avoids modifying multiple YAML files.
+
+---
+
+# 15. Helm Commands
+
+Package Chart
+
+```bash
+helm package .
+```
+
+Install
+
+```bash
+helm install receiver .
+```
+
+Upgrade
+
+```bash
+helm upgrade receiver .
+```
+
+Uninstall
+
+```bash
+helm uninstall receiver
+```
+
+---
+
+# 16. Source Cleanup
+
+Trainer demonstrated why runtime images should remain small.
+
+Avoid including:
+
+- Source Code
+- Git Repository
+- Maven Cache
+- Build Files
+- Temporary Files
+
+Production image should contain only:
+
+- Application
+- Runtime Libraries
+- Configuration
+
+---
+
+# 17. Build Pipeline
+
+Typical Enterprise Pipeline
+
+```
+Developer
+
+↓
+
+Git Push
+
+↓
+
+Jenkins
+
+↓
+
+Maven Build
+
+↓
+
+Unit Tests
+
+↓
+
+Sonar Analysis
+
+↓
+
+Docker Build
+
+↓
+
+Registry
+
+↓
+
+OpenShift Deployment
+
+↓
+
+Pods
+```
+
+---
+
+# 18. CI/CD Best Practices
+
+✔ Build once.
+
+✔ Deploy same artifact everywhere.
+
+✔ Keep runtime image minimal.
+
+✔ Version every image.
+
+✔ Store images in Registry.
+
+✔ Automate deployments.
+
+✔ Keep YAML in Git.
+
+✔ Use Helm for complex deployments.
+
+---
+
+# 19. Trainer Nuggets 💡
+
+- Docker Strategy is preferred.
+- Build Pods are temporary.
+- ImageStreams simplify version tracking.
+- Helm packages multiple Kubernetes resources.
+- Production images should be as small as possible.
+- Build once, deploy many times.
+
+---
+
+# 20. Useful Commands
+
+```bash
+# Builds
+
+oc get builds
+
+oc describe build <build-name>
+
+oc start-build <buildconfig>
+
+# ImageStreams
+
+oc get is
+
+oc describe is
+
+# Helm
+
+helm install
+
+helm upgrade
+
+helm uninstall
+
+helm package
+```
+
+---
+
+# BofA Mapping
+
+Current Receiver Project Pipeline
+
+```
+Developer
+
+↓
+
+Git Commit
+
+↓
+
+Bitbucket
+
+↓
+
+Jenkins
+
+↓
+
+Maven Build
+
+↓
+
+JAR
+
+↓
+
+Docker Build
+
+↓
+
+Container Registry
+
+↓
+
+OpenShift Deployment
+
+↓
+
+ReplicaSet
+
+↓
+
+Pods
+
+↓
+
+Application Running
+```
+
+Observations from the project:
+
+- Jenkins performs CI.
+- Docker image is built from the generated JAR.
+- OpenShift deploys the container.
+- Deployments restart Pods automatically when a newer image is available.
+- During SIT deployments, successful Jenkins builds triggered OpenShift deployments, and new Pods became visible in the OpenShift console.
+
+---
+
+# Key Takeaways
+
+- CI focuses on building and testing applications.
+- CD focuses on deployment.
+- OpenShift supports Docker, Source-to-Image and Binary build strategies.
+- Docker Strategy provides maximum flexibility and is preferred for enterprise applications.
+- Build Pods are temporary and exist only during image creation.
+- ImageStreams manage image versions and deployment triggers.
+- Helm simplifies deployment of multiple Kubernetes resources.
+- Enterprise CI/CD pipelines automate the journey from source code to running Pods.
