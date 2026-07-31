@@ -755,3 +755,24 @@ Architecture Components
 |                        | uses Calico for policies) |                           |                           |
 +------------------------+---------------------------+---------------------------+---------------------------+
 </pre>
+
+
+## Lab - How two microserives exchange data via Queue in a asynchronous fashion
+```
+oc delete project jegan
+oc new-project jegan
+
+oc new-app --name=jms-producer https://github.com/tektutor/openshift-2731july-2026.git --context-dir=Day5/jms-demo/producer --strategy=docker
+oc new-app --name=jms-consumer https://github.com/tektutor/openshift-2731july-2026.git --context-dir=Day5/jms-demo/consumer --strategy=docker
+
+oc logs -f buildconfig/jms-producer
+oc logs -f buildconfig/jms-consumer
+
+oc get pods
+
+# Terminal 1
+oc logs -f deploy/jms-producer
+
+# Terminal 2
+oc logs -f deploy/jms-consumer
+```
