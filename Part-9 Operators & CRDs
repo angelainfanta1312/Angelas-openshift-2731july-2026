@@ -1,0 +1,489 @@
+
+# 1. Why Operators?
+
+Managing complex applications manually becomes difficult.
+
+Examples:
+
+- Database installation
+- Scaling
+- Backup
+- Certificate renewal
+- Upgrades
+- Monitoring
+
+Instead of performing these tasks manually, Kubernetes uses **Operators**.
+
+An Operator automates operational knowledge.
+
+It behaves like an experienced system administrator continuously managing an application.
+
+---
+
+# 2. What is an Operator?
+
+An Operator is an application that extends Kubernetes using Custom Resources.
+
+It continuously watches the cluster and performs actions automatically whenever required.
+
+Responsibilities include:
+
+- Installation
+- Configuration
+- Scaling
+- Self-healing
+- Upgrades
+- Backup & Restore (depending on the Operator)
+
+---
+
+# 3. Kubernetes Reconciliation Loop
+
+Operators continuously monitor the cluster.
+
+Flow:
+
+```
+Desired State
+
+↓
+
+Current State
+
+↓
+
+Compare
+
+↓
+
+If Different
+
+↓
+
+Take Corrective Action
+```
+
+This continuous comparison is called the **Reconciliation Loop**.
+
+---
+
+# 4. What is a CRD?
+
+CRD stands for **Custom Resource Definition**.
+
+By default, Kubernetes understands resources such as:
+
+- Pod
+- Deployment
+- Service
+- Secret
+- ConfigMap
+
+A CRD allows developers to introduce entirely new resource types.
+
+Example:
+
+```
+Database
+
+MessageQueue
+
+CacheCluster
+
+RedisCluster
+```
+
+These become native Kubernetes resources after the CRD is installed.
+
+---
+
+# 5. Custom Resources (CR)
+
+After installing a CRD,
+
+users create **Custom Resources**.
+
+Relationship:
+
+```
+CRD
+
+↓
+
+Defines
+
+↓
+
+Custom Resource
+
+↓
+
+Managed by Operator
+```
+
+Think of it like:
+
+Java
+
+```
+Class
+
+↓
+
+Object
+```
+
+Similarly,
+
+```
+CRD
+
+↓
+
+Custom Resource
+```
+
+---
+
+# 6. Controller
+
+Controllers continuously monitor Kubernetes resources.
+
+Responsibilities:
+
+- Observe changes
+- Compare desired state
+- Correct deviations
+
+Example:
+
+Deployment Controller
+
+Desired Replicas = 3
+
+Current Replicas = 2
+
+↓
+
+Create one additional Pod
+
+---
+
+# 7. Operator vs Controller
+
+Controller
+
+- Works with built-in Kubernetes resources.
+
+Examples:
+
+- Deployment Controller
+- ReplicaSet Controller
+
+Operator
+
+- Works with Custom Resources.
+- Encodes domain-specific operational knowledge.
+
+Operators extend Kubernetes beyond its built-in functionality.
+
+---
+
+# 8. Operator Lifecycle
+
+Typical lifecycle:
+
+```
+Install Operator
+
+↓
+
+Install CRD
+
+↓
+
+Create Custom Resource
+
+↓
+
+Operator Watches
+
+↓
+
+Application Created
+
+↓
+
+Operator Maintains State
+```
+
+---
+
+# 9. Operator SDK
+
+The Operator SDK simplifies Operator development.
+
+It generates project structure and boilerplate code.
+
+Benefits:
+
+- Faster development
+- Standard project layout
+- Easier maintenance
+
+---
+
+# 10. KOPF (Kubernetes Operator Framework)
+
+Trainer demonstrated KOPF.
+
+KOPF allows Operators to be written using Python.
+
+Advantages:
+
+- Simpler syntax
+- Quick prototyping
+- Easy to learn
+
+Typical flow:
+
+```
+Python Code
+
+↓
+
+KOPF
+
+↓
+
+Operator
+```
+
+---
+
+# 11. MetalLB Operator
+
+Trainer demonstrated MetalLB Operator.
+
+Purpose:
+
+Assign external IP addresses in bare-metal Kubernetes/OpenShift clusters.
+
+Without MetalLB:
+
+```
+LoadBalancer
+
+↓
+
+EXTERNAL-IP
+
+↓
+
+Pending
+```
+
+With MetalLB:
+
+```
+LoadBalancer
+
+↓
+
+External IP Assigned
+
+↓
+
+Application Accessible
+```
+
+---
+
+# 12. Why Operators are Useful
+
+Without Operator
+
+Administrator performs:
+
+- Install
+- Upgrade
+- Backup
+- Restore
+- Scaling
+- Monitoring
+
+Manually.
+
+With Operator
+
+Operator performs these tasks automatically.
+
+This reduces operational effort and minimizes human error.
+
+---
+
+# 13. Examples of Operators
+
+Common Operators:
+
+- MetalLB Operator
+- Prometheus Operator
+- Grafana Operator
+- Elasticsearch Operator
+- PostgreSQL Operator
+- MySQL Operator
+
+OpenShift itself is built around Operators for managing platform components.
+
+---
+
+# 14. OpenShift OperatorHub
+
+OpenShift provides **OperatorHub**.
+
+OperatorHub allows administrators to install Operators directly from the OpenShift Web Console.
+
+Examples:
+
+```
+OperatorHub
+
+↓
+
+Select Operator
+
+↓
+
+Install
+
+↓
+
+Operator Ready
+```
+
+This simplifies deployment and lifecycle management.
+
+---
+
+# 15. Why Enterprises Use Operators
+
+Benefits:
+
+- Automation
+- Repeatability
+- Self-healing
+- Standardization
+- Reduced manual intervention
+- Easier upgrades
+
+Operators capture operational best practices in software.
+
+---
+
+# 16. Best Practices
+
+✔ Use Operators for complex applications.
+
+✔ Let Operators manage lifecycle.
+
+✔ Avoid manual cluster administration when an Operator is available.
+
+✔ Use Custom Resources instead of modifying Operator-managed objects directly.
+
+✔ Install trusted Operators from verified sources.
+
+---
+
+# 17. Trainer Nuggets 💡
+
+- Operators automate operational knowledge.
+- CRDs extend Kubernetes.
+- Controllers manage built-in resources.
+- Operators manage custom resources.
+- MetalLB is commonly deployed as an Operator.
+- OpenShift extensively uses Operators internally.
+
+---
+
+# Useful Commands
+
+```bash
+# Operators
+
+oc get csv
+
+oc get subscriptions
+
+oc get installplans
+
+# CRDs
+
+oc get crd
+
+# Custom Resources
+
+oc get <custom-resource>
+
+# Operator Pods
+
+oc get pods -n openshift-operators
+```
+
+---
+
+# BofA Mapping
+
+Current Receiver Project
+
+```
+Receiver
+
+↓
+
+Deployment
+
+↓
+
+Pods
+```
+
+Currently,
+
+the Receiver application itself is **not managed by a custom Operator**.
+
+However, the OpenShift platform your application runs on may already be using Operators for services such as:
+
+- Logging
+- Monitoring
+- Networking
+- Storage
+
+For example:
+
+```
+MetalLB Operator
+
+↓
+
+LoadBalancer
+
+↓
+
+External IP Assignment
+```
+
+Similarly,
+
+platform teams may install Operators to manage databases, monitoring stacks or other infrastructure components without requiring manual administration.
+
+---
+
+# Key Takeaways
+
+- Operators automate operational tasks.
+- CRDs extend Kubernetes with new resource types.
+- Custom Resources are instances of a CRD.
+- Controllers manage built-in resources, while Operators manage custom resources.
+- Operator SDK and KOPF simplify Operator development.
+- MetalLB is an example of an Operator used to provide external IP addresses.
+- OpenShift relies heavily on Operators to manage enterprise platform components.
