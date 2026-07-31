@@ -1,11 +1,11 @@
 # openshift-2731july-2026
 
-## Post Assessment Link
+## Post Test Link ( Do this from your lab machine )
 <pre>
 https://forms.cloud.microsoft/r/LcndnXtN4g
 </pre>
 
-## Feedback Link
+## Feedback Link ( Do this from your lab machine )
 <pre>
 https://forms.cloud.microsoft/r/1TDCPaa4Tp
 </pre>
