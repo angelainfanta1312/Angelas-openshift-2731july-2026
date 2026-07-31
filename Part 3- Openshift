@@ -1,0 +1,643 @@
+
+1. What is OpenShift?
+
+OpenShift is Red Hat's enterprise Kubernetes platform.
+
+It extends Kubernetes by providing:
+
+Enterprise security
+
+Built-in container registry
+
+Image Streams
+
+Routes
+
+Operators
+
+CI/CD support
+
+Web Console
+
+RBAC
+
+Monitoring & Logging integrations
+
+
+In short:
+
+Container Runtime
+        ↓
+Kubernetes
+        ↓
+OpenShift (Enterprise Platform)
+
+OpenShift is Kubernetes plus additional enterprise features that simplify application deployment and operations.
+
+
+---
+
+2. Why OpenShift?
+
+OpenShift reduces operational effort by providing:
+
+Secure-by-default platform
+
+Automated deployments
+
+Image management
+
+Integrated developer experience
+
+Enterprise support
+
+Better RBAC
+
+Operator ecosystem
+
+
+Instead of installing multiple Kubernetes add-ons manually, OpenShift includes most of them out of the box.
+
+
+---
+
+3. OpenShift Architecture
+
+An OpenShift cluster consists of:
+
+Control Plane (Master Nodes)
+
+Responsible for:
+
+API Server
+
+Scheduler
+
+Controller Manager
+
+etcd
+
+
+Usually multiple masters are deployed for High Availability.
+
+
+---
+
+Worker Nodes
+
+Responsible for running application workloads.
+
+Each worker contains:
+
+kubelet
+
+kube-proxy
+
+CRI-O runtime
+
+Pods
+
+
+
+---
+
+4. Projects (Namespaces)
+
+OpenShift calls Kubernetes namespaces Projects.
+
+Example:
+
+Project
+    ↓
+Deployments
+Pods
+Services
+Routes
+Secrets
+ConfigMaps
+PVCs
+
+Projects isolate applications and users.
+
+Common commands:
+
+oc new-project payment
+
+oc project payment
+
+oc projects
+
+
+---
+
+5. OpenShift CLI (oc)
+
+The oc command is OpenShift's CLI.
+
+It supports all Kubernetes operations and OpenShift-specific features.
+
+Examples:
+
+oc login
+
+oc whoami
+
+oc status
+
+oc get pods
+
+oc get svc
+
+oc get routes
+
+oc get projects
+
+oc get deployment
+
+oc get pvc
+
+oc get pv
+
+oc logs <pod>
+
+oc describe pod <pod>
+
+oc apply -f deployment.yaml
+
+oc delete pod <pod>
+
+Trainer emphasized learning oc instead of relying only on the Web Console.
+
+
+---
+
+6. Web Console
+
+OpenShift provides a graphical UI for managing clusters.
+
+Features include:
+
+Create projects
+
+Deploy applications
+
+View Pods
+
+View Routes
+
+View Services
+
+Monitor Deployments
+
+View Logs
+
+Create Secrets
+
+Create ConfigMaps
+
+Observe topology
+
+
+Useful for beginners, but automation should use YAML and oc.
+
+
+---
+
+7. Declarative Deployments
+
+Trainer repeatedly stressed:
+
+> Always use YAML.
+
+
+
+Avoid creating resources manually through the UI unless experimenting.
+
+Preferred workflow:
+
+Git
+     ↓
+YAML
+     ↓
+oc apply
+     ↓
+Deployment
+
+Benefits:
+
+Version control
+
+Repeatability
+
+CI/CD friendly
+
+Easier troubleshooting
+
+
+
+---
+
+8. Routes
+
+A Route exposes an application outside the cluster.
+
+Internet
+      ↓
+Route
+      ↓
+Service
+      ↓
+Pods
+
+Routes are an OpenShift feature.
+
+Kubernetes normally uses Ingress.
+
+
+---
+
+Types of Routes:
+
+Edge
+
+Passthrough
+
+Re-encrypt
+
+
+
+---
+
+Trainer Notes:
+
+Inside cluster:
+
+HTTP
+
+Outside cluster:
+
+HTTPS
+
+TLS terminates at the reverse proxy.
+
+
+---
+
+9. Image Streams
+
+Image Streams are unique to OpenShift.
+
+Instead of directly deploying Docker images,
+
+OpenShift tracks image versions using Image Streams.
+
+Benefits:
+
+Easier rollbacks
+
+Version tracking
+
+Automatic deployment triggers
+
+Enterprise image lifecycle management
+
+
+Commands:
+
+oc get is
+
+oc describe is
+
+
+---
+
+10. Internal Image Registry
+
+OpenShift includes an internal container registry.
+
+Instead of pushing images to Docker Hub,
+
+images can be stored inside the cluster.
+
+Example flow:
+
+Jenkins
+      ↓
+Build Image
+      ↓
+Image Registry
+      ↓
+Image Stream
+      ↓
+Deployment
+
+
+---
+
+11. BuildConfig
+
+BuildConfig defines how OpenShift builds container images.
+
+Supported strategies:
+
+Docker Strategy
+
+Uses Dockerfile.
+
+Developer has full control.
+
+Recommended by trainer.
+
+
+---
+
+Source-to-Image (S2I)
+
+Only source code is provided.
+
+OpenShift automatically:
+
+Downloads dependencies
+
+Compiles
+
+Packages
+
+Creates Image
+
+
+Easy for demos but less flexible.
+
+
+---
+
+Binary Strategy
+
+Developer uploads:
+
+jar
+
+war
+
+zip
+
+OpenShift creates image from binary.
+
+Trainer mentioned:
+
+Useful when CI already produces artifacts.
+
+In enterprise projects (like BofA), Jenkins usually builds the JAR first, then OpenShift deploys it.
+
+
+---
+
+12. Build Pipeline
+
+Typical enterprise flow:
+
+Git
+
+↓
+
+Jenkins
+
+↓
+
+Maven Build
+
+↓
+
+Jar
+
+↓
+
+Docker Build
+
+↓
+
+Image Registry
+
+↓
+
+OpenShift Deployment
+
+↓
+
+Pods
+
+Trainer recommended Docker Strategy over Source Strategy.
+
+
+---
+
+13. Helm
+
+Helm is Kubernetes package manager.
+
+Purpose:
+
+Deploy multiple YAML files together.
+
+Instead of applying many files individually,
+
+Helm packages everything as a Chart.
+
+Components:
+
+Chart
+
+Templates
+
+values.yaml
+
+Chart.yaml
+
+Common commands:
+
+helm package
+
+helm install
+
+helm upgrade
+
+helm uninstall
+
+Trainer demonstrated packaging WordPress.
+
+
+---
+
+14. Source Cleanup
+
+Trainer showed why Docker Strategy is preferred.
+
+Poor container image:
+
+Source Code
+
+.git
+
+pom.xml
+
+.m2
+
+Target
+
+Temporary Files
+
+Good runtime image:
+
+Application JAR
+
+Runtime Libraries
+
+Nothing Else
+
+Only runtime artifacts should exist inside production containers.
+
+
+---
+
+15. OpenShift Scheduling
+
+Developers do NOT decide:
+
+Worker node
+
+Pod placement
+
+
+Scheduler decides automatically.
+
+Scaling or restarting may move Pods to different nodes.
+
+Applications should never assume a fixed node.
+
+
+---
+
+16. OpenShift Topology View
+
+Topology visually shows:
+
+Application
+
+↓
+
+Deployment
+
+↓
+
+Pods
+
+↓
+
+Services
+
+↓
+
+Routes
+
+Useful for understanding application dependencies.
+
+
+---
+
+17. CRC (CodeReady Containers)
+
+Trainer recommended CRC for local practice.
+
+Benefits:
+
+Single-node OpenShift cluster
+
+Lightweight
+
+Local experimentation
+
+No cloud account required
+
+
+Useful for learning before deploying to enterprise clusters.
+
+
+---
+
+18. OpenShift Best Practices
+
+Use YAML for everything.
+
+Prefer declarative deployments.
+
+Keep applications stateless.
+
+Use external storage for persistent data.
+
+Push images to registry, not source code.
+
+Prefer Docker Strategy in production.
+
+Use Helm for managing multiple manifests.
+
+Never depend on Pod IPs.
+
+Keep runtime images minimal.
+
+
+
+---
+
+Trainer Nuggets
+
+"OpenShift is Kubernetes with enterprise capabilities."
+
+"Always follow declarative style."
+
+"Routes are OpenShift's alternative to Kubernetes Ingress."
+
+"Helm simplifies deployment of multiple YAMLs."
+
+"Developer writes Dockerfile; OpenShift manages deployment."
+
+"Only runtime dependencies should exist inside the container image."
+
+"OpenShift scheduler decides pod placement—not the developer."
+
+
+
+---
+
+Commands to Remember
+
+# Login
+oc login
+
+# Project
+oc new-project
+oc project
+oc projects
+
+# Resources
+oc get pods
+oc get svc
+oc get routes
+oc get deployment
+oc get pvc
+oc get pv
+oc get is
+
+# Debugging
+oc logs <pod>
+oc describe pod <pod>
+oc exec -it <pod> -- bash
+
+# Deployment
+oc apply -f deployment.yaml
+oc delete -f deployment.yaml
+
+# Helm
+helm package
+helm install
+helm upgrade
+helm uninstall
