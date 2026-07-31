@@ -776,3 +776,31 @@ oc logs -f deploy/jms-producer
 # Terminal 2
 oc logs -f deploy/jms-consumer
 ```
+
+## Lab - Deploying an application into Openshift from jar file
+
+```
+oc new-project jegan-project
+
+# This will create imagestream and buildconfig
+oc new-build java:openjdk-17-ubi8 --binary --name hello-ms
+
+git clone https://github.com/tektutor/spring-ms.git
+cd spring-ms
+mvn clean package
+
+cd ..
+ls
+
+mkdir ocp-build
+cp spring-ms/target/spring-hello-1.0.jar ocp-build
+
+
+# This will build an image with the start you provided and pushes the image to the Imagestream name hello-ms
+oc start-build hello-ms --from-dir=ocp-build --follow
+
+
+# Deploying the application form imagestream
+oc new-app hello-ms
+oc expose svc/hello-ms
+oc get route hello-ms -o jsonpath='{.spec.host}{"\n"}'
