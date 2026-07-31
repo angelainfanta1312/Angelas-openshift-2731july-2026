@@ -804,3 +804,27 @@ oc start-build hello-ms --from-dir=ocp-build --follow
 oc new-app hello-ms
 oc expose svc/hello-ms
 oc get route hello-ms -o jsonpath='{.spec.host}{"\n"}'
+```
+
+## Lab - Horizontal Pod Auto-scaling based on CPU Utilization
+```
+oc delete project jegan
+oc new-project jegan
+
+cd ~
+git clone https://github.com/tektutor/openshift-june-2026.git
+cd openshift-june-2026
+cd Day4/auto-scaling
+oc create -f hello-deploy.yml --save-config=true
+oc get pods
+oc create -f hello-hpa.yml --save-config
+
+oc expose deploy/nginx --port=8080
+oc expose svc/nginx
+oc get route
+```
+
+We need to stree the pod with more traffic
+```
+ab -k -n 200000 -c 1000 https://nginx-jegan.apps.ocp4.palmeto.org/
+```
