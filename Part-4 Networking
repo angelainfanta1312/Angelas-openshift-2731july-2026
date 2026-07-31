@@ -1,0 +1,609 @@
+
+1. Kubernetes Networking Model
+
+One of Kubernetes' biggest strengths is its networking model.
+
+Basic principle:
+
+Every Pod gets its own IP.
+
+Pods communicate directly without NAT.
+
+Pods can communicate across nodes.
+
+Applications do not need to know where another Pod is running.
+
+
+Networking should remain transparent to developers.
+
+
+---
+
+2. Cluster Networking
+
+Communication occurs at multiple levels:
+
+External Client
+        │
+        ▼
+      Route
+        │
+        ▼
+     Service
+        │
+        ▼
+      Pod A
+        │
+        ▼
+      Pod B
+
+Networking happens through Kubernetes resources rather than hardcoded IP addresses.
+
+
+---
+
+3. Pod Networking
+
+Every Pod receives:
+
+Unique IP address
+
+Shared network namespace (within same pod)
+
+localhost communication between containers
+
+Dynamic IP allocation
+
+
+Important:
+
+Never hardcode Pod IPs.
+
+Pods may restart and receive different IPs.
+
+
+---
+
+4. Node Networking
+
+A cluster consists of multiple nodes.
+
+Example from training:
+
+Master01   → 10.128.0.0/24
+Master02   → 10.129.0.0/24
+Master03   → 10.130.0.0/24
+
+Worker01   → 10.131.0.0/24
+Worker02   → 10.128.2.0/24
+Worker03   → 10.129.2.0/24
+
+Kubernetes automatically manages node-to-node communication.
+
+Developers do not configure routing manually.
+
+
+---
+
+5. Pod-to-Pod Communication
+
+Pods can communicate:
+
+On same node
+
+Across different nodes
+
+
+Example
+
+Worker 1
+
+Pod A
+    │
+    │
+    ▼
+
+Worker 2
+
+Pod B
+
+Communication works automatically through Kubernetes networking.
+
+
+---
+
+6. Container Network Interface (CNI)
+
+Kubernetes itself does not implement networking.
+
+Networking is provided through CNI plugins.
+
+Examples:
+
+Flannel
+
+Calico
+
+Weave
+
+OVN-Kubernetes (default in modern OpenShift)
+
+
+Trainer mentioned:
+
+Node-to-node communication is handled by Kubernetes/OS,
+
+but Pod networking is implemented using CNI plugins.
+
+
+---
+
+7. Flannel
+
+Flannel creates an overlay network between nodes.
+
+Characteristics:
+
+Uses VXLAN tunneling
+
+Easy to configure
+
+Supports Pod-to-Pod communication
+
+Supports Pod-to-Service communication
+
+
+Limitations:
+
+No Network Policies
+
+Uses UDP encapsulation
+
+Slightly slower due to packet encapsulation
+
+
+Trainer note:
+
+Flannel is easier to understand.
+
+
+---
+
+8. Calico
+
+Calico is another CNI plugin.
+
+Advantages:
+
+High performance
+
+Uses BGP
+
+Supports Network Policies
+
+Easier packet debugging
+
+Better enterprise choice
+
+
+Trainer mentioned:
+
+Can integrate well with packet analysis tools.
+
+
+---
+
+9. Weave
+
+Weave creates a mesh network.
+
+Characteristics:
+
+Uses UDP
+
+Simple architecture
+
+Easy to understand
+
+
+Limitation:
+
+More difficult to troubleshoot compared to Calico.
+
+
+---
+
+10. Kubernetes Services
+
+Pods are temporary.
+
+Services provide stable networking.
+
+Types covered:
+
+
+---
+
+ClusterIP
+
+Default service.
+
+Accessible only within cluster.
+
+Typical use:
+
+Frontend
+      │
+      ▼
+
+Backend API
+
+      │
+      ▼
+
+Database
+
+Database should generally be exposed only using ClusterIP.
+
+
+---
+
+NodePort
+
+Exposes service on every worker node.
+
+Example:
+
+WorkerIP:32000
+
+Even if Pod moves,
+
+NodePort remains available.
+
+Useful for:
+
+Testing
+
+Labs
+
+Small environments
+
+
+Trainer command:
+
+oc describe svc <service>
+
+shows allocated NodePort.
+
+
+---
+
+LoadBalancer
+
+Used mostly in cloud.
+
+AWS
+
+Azure
+
+GCP
+
+Cloud provider assigns external IP.
+
+Example:
+
+Internet
+
+↓
+
+LoadBalancer
+
+↓
+
+Service
+
+↓
+
+Pods
+
+
+---
+
+11. MetalLB
+
+Bare-metal clusters cannot automatically assign external IPs.
+
+Trainer demonstrated MetalLB.
+
+MetalLB:
+
+Assigns external IPs
+
+Works with LoadBalancer services
+
+Advertises IPs using BGP
+
+
+Without MetalLB:
+
+EXTERNAL-IP
+
+<pending>
+
+After MetalLB:
+
+EXTERNAL-IP
+
+192.168.x.x
+
+
+---
+
+12. Ingress
+
+Ingress is a Kubernetes resource.
+
+Purpose:
+
+HTTP/HTTPS routing.
+
+Needs:
+
+Ingress Resource
+
+Ingress Controller
+
+Load Balancer
+
+
+Example controllers:
+
+NGINX
+
+HAProxy
+
+F5
+
+
+
+---
+
+13. OpenShift Routes
+
+OpenShift simplifies external access using Routes.
+
+Browser
+
+↓
+
+Route
+
+↓
+
+Service
+
+↓
+
+Pods
+
+Routes are built on Ingress concepts but provide a simpler developer experience.
+
+
+---
+
+14. TLS Termination
+
+Trainer discussed Edge Routing.
+
+Flow:
+
+Browser
+
+HTTPS
+
+↓
+
+Bank Reverse Proxy
+
+↓
+
+HTTP
+
+↓
+
+Application
+
+TLS terminates at the reverse proxy.
+
+Internal communication can remain HTTP.
+
+Benefits:
+
+Easier certificate management
+
+Reduced complexity
+
+Better performance inside cluster
+
+
+
+---
+
+15. Reverse Proxy
+
+Purpose:
+
+SSL termination
+
+Load balancing
+
+Request forwarding
+
+Security
+
+
+Banks commonly terminate TLS before traffic enters OpenShift.
+
+
+---
+
+16. DNS
+
+Applications should access services using:
+
+service-name
+
+or
+
+service-name.namespace.svc.cluster.local
+
+Never use Pod IPs.
+
+
+---
+
+17. kube-proxy
+
+Runs on every worker node.
+
+Responsibilities:
+
+Service networking
+
+Load balancing
+
+Forwarding traffic to Pods
+
+
+Developers rarely interact with it directly.
+
+
+---
+
+18. Scheduling & Networking
+
+When Pods restart:
+
+Pod IP changes
+
+Node may change
+
+Service remains same
+
+
+Applications should always communicate through Services.
+
+Never through Pod IP.
+
+
+---
+
+19. Network Policies
+
+Supported by:
+
+Calico
+
+OVN Kubernetes
+
+
+Not supported by Flannel.
+
+Purpose:
+
+Control which Pods can communicate.
+
+Example:
+
+Frontend
+
+↓
+
+Backend
+
+↓
+
+Database
+
+Reject all other traffic.
+
+
+---
+
+20. Best Practices
+
+✔ Never hardcode Pod IPs
+
+✔ Always communicate through Services
+
+✔ Use Routes for external access
+
+✔ Keep databases behind ClusterIP
+
+✔ Prefer DNS names
+
+✔ Use Network Policies
+
+✔ Let scheduler choose nodes
+
+✔ Don't assume Pod location
+
+
+---
+
+Trainer Nuggets
+
+"Node-to-node communication is handled automatically."
+
+"Pod networking comes from CNI plugins."
+
+"Flannel is easy to understand but lacks Network Policies."
+
+"Calico offers better debugging and performance."
+
+"MetalLB is required for LoadBalancer on bare-metal clusters."
+
+"Routes are OpenShift's preferred way of exposing applications."
+
+"Applications should never depend on Pod IPs."
+
+
+
+---
+
+Important Commands
+
+# Services
+oc get svc
+oc describe svc <service>
+
+# Routes
+oc get routes
+
+# Pods
+oc get pods -o wide
+
+# Nodes
+oc get nodes
+
+# Expose deployment
+oc expose deployment nginx --type=LoadBalancer
+
+# Curl Service
+curl http://<service-ip>
+
+# Curl NodePort
+curl http://<node-ip>:<node-port>
+
+
+🏦 BofA Mapping (Networking)
+
+Relating this to your project:
+
+Your CPS Payment Receiver microservice should communicate with other internal services using ClusterIP Services, not Pod IPs.
+
+External bank traffic enters through enterprise infrastructure (reverse proxy/load balancer), then reaches OpenShift Routes or Services.
+
+During pod restarts or scaling, networking continues to work because clients use the Service DNS name, not individual pod addresses.
+
+This is why your application should never cache or depend on a specific pod's IP..
