@@ -1,0 +1,697 @@
+
+# 1. Introduction
+
+Deploying an application successfully is only one part of running applications on OpenShift.
+
+Real-world environments frequently encounter issues during:
+
+- Build
+- Deployment
+- Networking
+- Storage
+- Configuration
+- Security
+- Runtime
+
+The objective of troubleshooting is to quickly identify the root cause and restore application availability.
+
+---
+
+# 2. General Troubleshooting Approach
+
+Always troubleshoot layer by layer.
+
+```
+Application
+
+↓
+
+Container
+
+↓
+
+Pod
+
+↓
+
+Deployment
+
+↓
+
+Service
+
+↓
+
+Route
+
+↓
+
+OpenShift
+
+↓
+
+Infrastructure
+```
+
+Never jump directly to conclusions.
+
+---
+
+# 3. Useful OpenShift Commands
+
+View Pods
+
+```bash
+oc get pods
+```
+
+View detailed Pod information
+
+```bash
+oc describe pod <pod-name>
+```
+
+View logs
+
+```bash
+oc logs <pod-name>
+```
+
+Follow logs
+
+```bash
+oc logs -f <pod-name>
+```
+
+View previous container logs
+
+```bash
+oc logs --previous <pod-name>
+```
+
+Execute inside Pod
+
+```bash
+oc exec -it <pod-name> -- sh
+```
+
+View Events
+
+```bash
+oc get events
+```
+
+Describe Deployment
+
+```bash
+oc describe deployment <deployment-name>
+```
+
+---
+
+# 4. Pod Status
+
+Common Pod states
+
+### Pending
+
+Pod has not yet been scheduled.
+
+Possible reasons
+
+- Insufficient resources
+- PVC unavailable
+- Node unavailable
+
+---
+
+### ContainerCreating
+
+Container image is being prepared.
+
+Possible reasons
+
+- Image download
+- Volume attachment
+- Secret mounting
+
+---
+
+### Running
+
+Application is running normally.
+
+---
+
+### CrashLoopBackOff
+
+Container starts
+
+↓
+
+Application crashes
+
+↓
+
+Container restarts
+
+↓
+
+Crash repeats
+
+Possible reasons
+
+- Application exception
+- Invalid configuration
+- Missing environment variables
+- Database unavailable
+
+---
+
+### ImagePullBackOff
+
+OpenShift cannot pull the container image.
+
+Possible reasons
+
+- Incorrect image name
+- Missing registry credentials
+- Image does not exist
+- Registry unavailable
+
+---
+
+### ErrImagePull
+
+Initial image pull failure.
+
+Usually followed by
+
+ImagePullBackOff.
+
+---
+
+# 5. Deployment Troubleshooting
+
+Deployment not created?
+
+Check
+
+```bash
+oc get deployment
+```
+
+Deployment created but no Pods?
+
+Check ReplicaSet
+
+```bash
+oc get rs
+```
+
+Pods created but not running?
+
+Describe Pod
+
+```bash
+oc describe pod
+```
+
+---
+
+# 6. Build Troubleshooting
+
+Build failed?
+
+Check
+
+```bash
+oc get builds
+
+oc describe build <build-name>
+```
+
+Possible causes
+
+- Maven failure
+- Dockerfile issue
+- Source checkout failure
+- Registry authentication
+
+---
+
+# 7. Service Troubleshooting
+
+Service exists?
+
+```bash
+oc get svc
+```
+
+Verify selector
+
+```bash
+oc describe svc
+```
+
+Common issue
+
+Selector labels don't match Pod labels.
+
+Result
+
+Service has
+
+```
+0 Endpoints
+```
+
+---
+
+# 8. Route Troubleshooting
+
+Route exists?
+
+```bash
+oc get routes
+```
+
+Check
+
+- Hostname
+- TLS configuration
+- Service mapping
+
+If Route works but application doesn't,
+
+issue may be inside application.
+
+---
+
+# 9. PVC Troubleshooting
+
+PVC Pending
+
+Possible reasons
+
+- No matching StorageClass
+- No available PV
+- Incorrect AccessMode
+
+Commands
+
+```bash
+oc get pvc
+
+oc describe pvc
+```
+
+---
+
+# 10. Secret Troubleshooting
+
+Application fails during startup
+
+Check
+
+- Secret exists
+- Secret mounted correctly
+- Secret name matches Deployment YAML
+
+Commands
+
+```bash
+oc get secrets
+
+oc describe secret
+```
+
+---
+
+# 11. ConfigMap Troubleshooting
+
+Configuration not loading?
+
+Verify
+
+- ConfigMap exists
+- Mounted correctly
+- Environment variables mapped
+
+Commands
+
+```bash
+oc get configmap
+```
+
+---
+
+# 12. Network Troubleshooting
+
+Cannot access application?
+
+Check
+
+```
+Route
+
+↓
+
+Service
+
+↓
+
+Pod
+```
+
+Never start with the Pod.
+
+Start from Route.
+
+---
+
+# 13. Log-based Troubleshooting
+
+Logs are the first place to investigate.
+
+```bash
+oc logs <pod>
+```
+
+Look for
+
+- Exceptions
+- Stack traces
+- Startup failures
+- Database connection errors
+
+---
+
+# 14. Resource Issues
+
+Pod Pending
+
+Check
+
+- CPU requests
+- Memory requests
+- Node capacity
+
+Commands
+
+```bash
+oc describe pod
+```
+
+---
+
+# 15. Permission Issues
+
+Symptoms
+
+```
+Permission Denied
+
+Forbidden
+
+Cannot Create Directory
+```
+
+Possible causes
+
+- SCC restriction
+- Missing Role
+- Missing RoleBinding
+- Running as non-root
+
+---
+
+# 16. DNS Troubleshooting
+
+Application cannot reach another service.
+
+Verify
+
+```
+Service Name
+
+Namespace
+
+Cluster DNS
+```
+
+Never hardcode Pod IP.
+
+---
+
+# 17. Build vs Runtime Problems
+
+Build Problem
+
+Application never deployed.
+
+Runtime Problem
+
+Application deployed
+
+↓
+
+Starts
+
+↓
+
+Fails later
+
+Identify which stage failed before troubleshooting.
+
+---
+
+# 18. Common Errors Covered During Training
+
+### CrashLoopBackOff
+
+Application repeatedly crashes.
+
+---
+
+### ImagePullBackOff
+
+Container image unavailable.
+
+---
+
+### Pending PVC
+
+Storage unavailable.
+
+---
+
+### Route Misconfiguration
+
+External traffic cannot reach application.
+
+---
+
+### Service Selector Mismatch
+
+Service cannot locate Pods.
+
+---
+
+### YAML Indentation Errors
+
+Incorrect spacing causes deployment failures.
+
+Always validate YAML carefully.
+
+---
+
+# 19. Real Project Troubleshooting (BofA)
+
+During the Receiver project, several practical issues were encountered:
+
+### ImagePullBackOff
+
+Cause:
+
+Registry Secret was missing.
+
+Resolution:
+
+- Created required Secret.
+- Linked Secret to Service Account.
+- Restarted Deployment.
+
+Application deployed successfully.
+
+---
+
+### Deployment Not Created
+
+Cause:
+
+Incorrect Project Name in Jenkins/CD configuration.
+
+Resolution:
+
+Updated project configuration and redeployed.
+
+---
+
+### MQ Certificates
+
+Cause:
+
+Required certificate missing.
+
+Resolution:
+
+Certificate added as Secret.
+
+Deployment succeeded.
+
+---
+
+### Log Directory
+
+Application attempted
+
+```
+/logs
+```
+
+Result
+
+```
+Could not create directory
+```
+
+Resolution
+
+Use console logging.
+
+Allow OpenShift and Splunk to manage log collection.
+
+---
+
+### Route Testing
+
+Application verified through
+
+- Secure Route
+- Unsecure Route
+- Port Forwarding
+
+This helped isolate whether the issue was in the application or the networking layer.
+
+---
+
+# 20. Best Practices
+
+✔ Start troubleshooting from the outermost layer.
+
+✔ Read Events.
+
+✔ Read Logs.
+
+✔ Verify YAML.
+
+✔ Check Secrets.
+
+✔ Verify ConfigMaps.
+
+✔ Validate Routes.
+
+✔ Confirm Services.
+
+✔ Avoid assumptions.
+
+---
+
+# Trainer Nuggets 💡
+
+- Logs are your best friend.
+- Always troubleshoot systematically.
+- YAML indentation matters.
+- Verify resource status before debugging application code.
+- Use `oc describe` whenever resources behave unexpectedly.
+
+---
+
+# Quick Troubleshooting Flow
+
+```
+Application Not Working
+
+↓
+
+Pod Running?
+
+↓
+
+NO → Describe Pod
+
+↓
+
+YES
+
+↓
+
+Logs
+
+↓
+
+Configuration
+
+↓
+
+Service
+
+↓
+
+Route
+
+↓
+
+External Access
+```
+
+---
+
+# Useful Commands
+
+```bash
+oc get pods
+
+oc describe pod <pod>
+
+oc logs <pod>
+
+oc logs -f <pod>
+
+oc exec -it <pod> -- sh
+
+oc get svc
+
+oc describe svc
+
+oc get routes
+
+oc get pvc
+
+oc describe pvc
+
+oc get events
+
+oc describe deployment
+```
+
+---
+
+# Key Takeaways
+
+- Troubleshooting should follow a structured approach.
+- Logs, Events and Describe commands provide the most useful diagnostic information.
+- Validate each layer independently.
+- Most deployment failures are caused by configuration, networking or permission issues rather than application code.
+- Understanding the interaction between Pods, Services, Routes, Secrets and Storage significantly reduces debugging time.
