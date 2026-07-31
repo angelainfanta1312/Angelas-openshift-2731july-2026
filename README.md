@@ -1,9 +1,14 @@
 # openshift-2731july-2026
 
-## Pre-test link
+## Post Assessment Link
 <pre>
-https://forms.cloud.microsoft/r/Mrgt95bg0Q  
-</pre>  
+https://forms.cloud.microsoft/r/LcndnXtN4g
+</pre>
+
+## Feedback Link
+<pre>
+https://forms.cloud.microsoft/r/1TDCPaa4Tp
+</pre>
 
 ## About about lab environment
 <pre>
