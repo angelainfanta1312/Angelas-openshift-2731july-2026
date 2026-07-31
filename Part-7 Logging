@@ -1,0 +1,615 @@
+
+
+# 1. Why Logging?
+
+Logs are one of the most important tools for understanding application behavior.
+
+Logs help in:
+
+- Debugging application issues
+- Monitoring application health
+- Identifying failures
+- Auditing transactions
+- Performance analysis
+- Production support
+
+In cloud-native applications, logs become the primary source of troubleshooting.
+
+---
+
+# 2. Traditional Logging
+
+Traditionally, Java applications stored logs inside files.
+
+Example
+
+```
+/logs/application.log
+
+D:\Logs\application.log
+
+/opt/logs
+```
+
+Logging frameworks like Log4j or Logback wrote logs directly into files.
+
+Problems:
+
+- Log files consume disk space.
+- Difficult to manage across multiple servers.
+- Logs are lost if the server crashes.
+- Difficult to aggregate logs from multiple instances.
+
+---
+
+# 3. Logging in Containers
+
+Containers are **ephemeral**.
+
+A container's local filesystem is temporary.
+
+If a Pod is deleted:
+
+- Application restarts.
+- Container filesystem is recreated.
+- Log files inside the container are lost.
+
+Therefore,
+
+Cloud-native applications prefer **console logging**.
+
+---
+
+# 4. Console Logging
+
+Instead of writing logs to files,
+
+applications write logs to:
+
+```
+stdout
+
+stderr
+```
+
+Example
+
+```
+Spring Boot
+
+↓
+
+Console
+
+↓
+
+OpenShift captures logs
+```
+
+This is the recommended approach for containerized applications.
+
+---
+
+# 5. OpenShift Log Flow
+
+The logging flow is:
+
+```
+Application
+
+↓
+
+stdout / stderr
+
+↓
+
+CRI-O Container Runtime
+
+↓
+
+Worker Node
+
+↓
+
+/var/log/pods
+
+↓
+
+Log Collector
+
+↓
+
+Splunk
+```
+
+Application developers generally do **not** interact with `/var/log/pods` directly.
+
+---
+
+# 6. Where are Pod Logs Stored?
+
+When an application writes to the console,
+
+OpenShift stores container logs on the worker node.
+
+Example path:
+
+```
+/var/log/pods/
+```
+
+These logs are then collected by the platform's logging agent.
+
+Application developers typically access logs using:
+
+```
+oc logs
+```
+
+or
+
+OpenShift Web Console.
+
+---
+
+# 7. Why We Don't Access `/var/log/pods`
+
+`/var/log/pods` exists on the **worker node**, not inside the application container.
+
+Therefore:
+
+- `oc exec` into the application Pod will **not** show this directory.
+- Access usually requires cluster administrator privileges.
+- Platform teams manage these logs.
+
+---
+
+# 8. Splunk Integration
+
+Most enterprise OpenShift environments forward logs to Splunk.
+
+Flow:
+
+```
+Application
+
+↓
+
+stdout
+
+↓
+
+OpenShift
+
+↓
+
+/var/log/pods
+
+↓
+
+Log Collector
+
+↓
+
+Splunk Index
+```
+
+Splunk provides:
+
+- Centralized log storage
+- Search
+- Filtering
+- Dashboards
+- Alerts
+- Historical log retention
+
+---
+
+# 9. Searching Logs in Splunk
+
+Logs can typically be searched using:
+
+- Application Name
+- Pod Name
+- Namespace
+- Source
+- Index
+- Timestamp
+
+Example:
+
+```
+source=receiver
+
+namespace=payments
+```
+
+The exact fields depend on how the Splunk team configures log forwarding.
+
+---
+
+# 10. Log Retention
+
+Container logs disappear when Pods restart.
+
+However,
+
+once logs reach Splunk,
+
+they remain available based on the configured retention policy.
+
+In your project,
+
+Parvinder mentioned that historical logs remain available for several months through Splunk.
+
+---
+
+# 11. Application Log Path
+
+During your Receiver project,
+
+the application attempted to create:
+
+```
+/logs
+```
+
+Result:
+
+```
+Could not create directory /logs
+```
+
+Reason:
+
+OpenShift containers generally do not expect applications to create arbitrary root-level directories.
+
+Instead,
+
+applications should log to:
+
+```
+stdout
+```
+
+---
+
+# 12. File Logging vs Console Logging
+
+## File Logging
+
+```
+Application
+
+↓
+
+/logs/application.log
+```
+
+Advantages:
+
+- Traditional approach
+- Easy local inspection
+
+Disadvantages:
+
+- Lost when Pod is deleted
+- Requires Persistent Storage
+- Harder to aggregate
+
+---
+
+## Console Logging
+
+```
+Application
+
+↓
+
+stdout
+
+↓
+
+OpenShift
+
+↓
+
+Splunk
+```
+
+Advantages:
+
+- Cloud-native
+- Centralized
+- Platform-managed
+- Easier scaling
+
+Preferred in OpenShift.
+
+---
+
+# 13. Can Applications Still Write Log Files?
+
+Yes.
+
+If business requirements demand file-based logging,
+
+the application can write to a mounted volume.
+
+Example
+
+```
+Application
+
+↓
+
+/logs
+
+↓
+
+Volume Mount
+
+↓
+
+PVC
+
+↓
+
+Persistent Volume
+```
+
+However,
+
+this is generally required only when:
+
+- Compliance mandates log files
+- Legacy software depends on log files
+
+---
+
+# 14. Logging Frameworks
+
+Common Java logging frameworks:
+
+- Log4j2
+- Logback
+- SLF4J
+
+Typical enterprise approach:
+
+```
+Application
+
+↓
+
+Logback / Log4j
+
+↓
+
+Console Appender
+
+↓
+
+stdout
+```
+
+Avoid File Appenders unless specifically required.
+
+---
+
+# 15. Accessing Logs
+
+Command Line
+
+```bash
+oc logs <pod-name>
+```
+
+Follow logs in real time
+
+```bash
+oc logs -f <pod-name>
+```
+
+Previous container logs
+
+```bash
+oc logs --previous <pod-name>
+```
+
+---
+
+# 16. OpenShift Web Console
+
+Logs can also be viewed from:
+
+```
+Workloads
+
+↓
+
+Pods
+
+↓
+
+Logs
+```
+
+Useful for quick debugging.
+
+---
+
+# 17. Log Levels
+
+Common log levels:
+
+- TRACE
+- DEBUG
+- INFO
+- WARN
+- ERROR
+
+Production systems usually avoid DEBUG unless troubleshooting.
+
+---
+
+# 18. Structured Logging
+
+Instead of plain text,
+
+structured logs use key-value pairs or JSON.
+
+Example
+
+```
+PaymentId=12345
+
+CustomerId=9988
+
+Status=SUCCESS
+```
+
+Benefits:
+
+- Easier searching
+- Better dashboards
+- Improved analytics
+
+---
+
+# 19. Logging Best Practices
+
+✔ Log meaningful events.
+
+✔ Include correlation IDs where applicable.
+
+✔ Avoid excessive logging.
+
+✔ Do not log passwords or secrets.
+
+✔ Mask sensitive customer information.
+
+✔ Use INFO for business events.
+
+✔ Use ERROR only for failures.
+
+✔ Prefer console logging in OpenShift.
+
+---
+
+# 20. Monitoring vs Logging
+
+Logging answers:
+
+"What happened?"
+
+Monitoring answers:
+
+"How healthy is the system?"
+
+Examples:
+
+Monitoring:
+
+- CPU
+- Memory
+- Pod Restarts
+- Response Time
+
+Logging:
+
+- Exceptions
+- Stack Traces
+- Business Events
+- API Requests
+
+Both are required for production systems.
+
+---
+
+# Trainer Nuggets 💡
+
+- Containers should log to stdout.
+- OpenShift captures console logs automatically.
+- Splunk provides centralized log management.
+- File-based logging should be avoided unless necessary.
+- Applications should never assume log files remain after Pod deletion.
+
+---
+
+# Useful Commands
+
+```bash
+# View logs
+
+oc logs <pod>
+
+# Follow logs
+
+oc logs -f <pod>
+
+# Previous container logs
+
+oc logs --previous <pod>
+
+# Describe Pod
+
+oc describe pod <pod>
+```
+
+---
+
+# BofA Mapping
+
+Receiver Application
+
+```
+Receiver
+
+↓
+
+Spring Boot
+
+↓
+
+Console Logging
+
+↓
+
+stdout
+
+↓
+
+OpenShift
+
+↓
+
+/var/log/pods
+
+↓
+
+Splunk
+
+↓
+
+Support Team
+```
+
+Current project observations:
+
+- Receiver currently logs to the console.
+- Splunk captures logs from OpenShift.
+- No Persistent Volume is configured for application logs.
+- Attempts to write directly to `/logs` failed due to container restrictions.
+- The preferred enterprise approach is console logging with centralized log aggregation.
+
+---
+
+# Key Takeaways
+
+- Cloud-native applications should log to stdout/stderr.
+- OpenShift automatically captures container logs.
+- `/var/log/pods` is managed by the platform and resides on worker nodes.
+- Splunk provides centralized storage, search, and retention of logs.
+- File-based logging should be used only when business or compliance requirements demand it.
+- Console logging combined with centralized aggregation is the recommended logging strategy for OpenShift applications.
